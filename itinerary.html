@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東京親子夏日12日遊 (詳細版)</title>
+    <!-- Chosen Palette: Calm Journey (based on neutrals like stone/beige with a soft teal accent) -->
+    <!-- Application Structure Plan: A single-page dashboard design with a top navigation for smooth scrolling. The structure includes: 1) An 'Overview' section with key stats and a pie chart for a quick grasp of the trip's distribution. 2) An interactive 'Daily Itinerary' timeline for easy day-by-day exploration. 3) A 'Key Tips' section using an accordion to organize planning advice. This structure was chosen to transform the linear report into a multi-faceted, non-linear exploratory experience, allowing users to either follow the timeline chronologically or jump directly to specific planning topics, enhancing usability. -->
+    <!-- Visualization & Content Choices: 1) Trip Distribution: Goal=Inform -> Pie Chart (Chart.js/Canvas) -> Shows time spent per city -> Justification: Provides an immediate high-level understanding of the trip's focus. 2) Daily Itinerary: Goal=Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Presents daily activities with icons -> Justification: More engaging and scannable than a static table. 3) Planning Advice: Goal=Inform -> Accordion (HTML/CSS/JS) -> Organizes detailed tips into collapsible sections -> Justification: Prevents information overload and allows users to focus on one topic at a time. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f8f7f5;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            margin: auto;
+        }
+        .accordion-content {
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .accordion-button[aria-expanded="true"] .accordion-arrow {
+            transform: rotate(180deg);
+        }
+        .accordion-content.is-open {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-teal-800">東京親子夏日之旅</h1>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#overview" class="font-medium text-stone-600 hover:text-teal-600 transition">行程總覽</a>
+                    <a href="#itinerary" class="font-medium text-stone-600 hover:text-teal-600 transition">每日行程</a>
+                    <a href="#tips" class="font-medium text-stone-600 hover:text-teal-600 transition">規劃建議</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="overview" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">行程總覽</h2>
+            <p class="text-center text-stone-600 mb-8 max-w-2xl mx-auto">
+                這是一份為期12天的家庭夏日旅程最終版計畫。我們將探索東京、伊豆、箱根與橫濱，並參加兩場盛大的煙火大會，創造最豐富多元的回憶。
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">👨‍👩‍👧</div>
+                        <h3 class="font-bold text-lg">旅遊成員</h3>
+                        <p class="text-stone-600">2位大人, 1位小孩 (4歲)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">📅</div>
+                        <h3 class="font-bold text-lg">旅遊期間</h3>
+                        <p class="text-stone-600">12天11夜</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">🚗</div>
+                        <h3 class="font-bold text-lg">交通方式</h3>
+                        <p class="text-stone-600">電車、地鐵與自駕</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">🎆</div>
+                        <h3 class="font-bold text-lg">夏日重點</h3>
+                        <p class="text-stone-600">兩場花火大會</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-bold text-center mb-4">各地區住宿夜數分佈</h3>
+                    <div class="chart-container">
+                        <canvas id="tripDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="itinerary" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">每日行程時間軸</h2>
+            <div id="timeline" class="relative border-l-2 border-teal-200 ml-6 md:ml-0">
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2 class="text-3xl font-bold text-center mb-8">重點規劃建議</h2>
+            <div id="tips-accordion" class="space-y-4 max-w-4xl mx-auto">
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-stone-800 text-white mt-12">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>祝您旅途愉快！</p>
+        </div>
+    </footer>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const itineraryData = [
+            { 
+                day: 1, date: "7/24", weekday: "四", title: "抵達東京，舒適入住 🌃", icon: "✈️", accommodation: "新橋 (3晚)", 
+                details: [
+                    "<b>19:55：</b>班機準時抵達成田機場 (NRT)。",
+                    "<b>20:00 - 21:30：</b>辦理入境審查、領取行李、過海關。",
+                    "<b>21:30 - 23:00：</b>搭乘 <b>Skyliner + JR山手線</b> 前往新橋飯店。",
+                    "<b>23:00：</b>抵達飯店，辦理入住手續，盡快休息。"
+                ],
+                tips: "由於抵達時間已晚，當晚不安排活動，以恢復體力為優先。"
+            },
+            { 
+                day: 2, date: "7/25", weekday: "五", title: "商場購物 & 職人體驗 🛍️", icon: "👷", accommodation: "新橋",
+                details: [
+                    "<b>上午：</b>在飯店悠閒享用早餐。",
+                    "<b>10:30：</b>從新橋搭乘<b>百合海鷗號</b>前往豐洲。",
+                    "<b>11:00 - 15:00：</b>在 <b>LaLaport 豐洲</b> 購物中心逛街、享用午餐。",
+                    "<b>16:00 - 21:00：</b>參加已預約的 <b>KidZania 第二部(下午場)</b>，讓孩子盡情體驗。",
+                    "<b>21:00 後：</b>活動結束，可在 LaLaport 或返回新橋用餐。"
+                ],
+                tips: "KidZania 熱門項目搶手，建議入場後第一時間先去預約一個最想玩的。"
+            },
+            { 
+                day: 3, date: "7/26", weekday: "六", title: "動物園與夏日花火 🐼", icon: "🎆", accommodation: "新橋",
+                details: [
+                    "<b>上午：</b>在飯店享用早餐後，從新橋搭乘JR山手線前往上野。",
+                    "<b>📝【本日備忘】</b>：務必在JR車站領取隔天前往熱海的<b>Saphir 踴子號</b>實體車票！",
+                    "<b>10:30 - 13:00：</b>參觀<b>上野動物園</b>。",
+                    "<b>14:30 - 17:00：</b>【重要】返回飯店<b>午睡休息</b>，為晚上儲備體力。",
+                    "<b>18:00 後：</b>前往淺草區域，準備參加<b>隅田川花火大會</b>。"
+                ],
+                tips: "強烈建議預訂付費觀覽席或景觀餐廳，以避開擁擠人潮。散場時人潮極多，請耐心移動。"
+            },
+            { 
+                day: 4, date: "7/27", weekday: "日", title: "前進伊豆，開啟海景自駕之旅 🚗", icon: "✨", accommodation: "伊豆高原 (2晚)",
+                details: [
+                    "<b>09:30：</b>在新橋飯店退房。",
+                    "<b>10:00 - 10:30：</b>從新橋搭JR至品川。",
+                    "<b>11:07 - 12:17：</b>搭乘豪華的 <b>Saphir 踴子號 1號</b> 從品川前往熱海。",
+                    "<b>12:30 - 14:00：</b>在熱海享用午餐，並前往租車公司取車。",
+                    "<b>14:00 後：</b>沿著國道135號海岸公路，悠閒開往伊豆高原飯店。"
+                ],
+                tips: "從品川搭車比東京車站更方便，車站結構較單純。"
+            },
+            { 
+                day: 5, date: "7/28", weekday: "一", title: "火山與動物的奇幻樂園 🌋", icon: "🌵", accommodation: "伊豆高原",
+                details: [
+                    "<b>上午：</b>自駕前往<b>大室山</b>，搭乘登山吊椅上山頂，在火山口步道散步。",
+                    "<b>中午：</b>在大室山下的餐廳區用餐。",
+                    "<b>下午：</b>探索隔壁的<b>伊豆仙人掌動物公園</b>，與水豚君等可愛動物近距離互動。",
+                    "<b>17:00：</b>開車返回飯店休息。"
+                ],
+                tips: "大室山山頂非常開闊，適合讓孩子小跑步活動，但需注意安全。"
+            },
+            { 
+                day: 6, date: "7/29", weekday: "二", title: "告別伊豆，輕裝前往箱根 ♨️", icon: "🎒", accommodation: "箱根 (1晚)",
+                details: [
+                    "<b>上午：</b>在伊豆飯店退房，並辦理<b>行李宅配</b>，將大行李直接寄往橫濱的飯店。",
+                    "<b>10:30 - 12:30：</b>輕裝開車，從伊豆高原前往<b>小田原</b>。",
+                    "<b>12:30 - 14:00：</b>在小田原享用午餐並<b>辦理還車手續</b>。",
+                    "<b>14:30：</b>在小田原站購買<b>「箱根周遊券」</b>。",
+                    "<b>15:00 後：</b>搭乘<b>箱根登山電車</b>上山，前往飯店入住。"
+                ],
+                tips: "行李宅配是本日行程順暢的關鍵，務必在離開伊豆時辦理。"
+            },
+            { 
+                day: 7, date: "7/30", weekday: "三", title: "箱根交通工具全制霸 🚠", icon: "🚢", accommodation: "橫濱 (3晚)",
+                details: [
+                    "<b>上午：</b>將隨身行李寄放飯店，開始使用周遊券進行<b>箱根環狀線之旅</b>。",
+                    "<b>行程：</b>體驗【登山纜車】→【空中纜車】→【海賊船】→【登山巴士】。",
+                    "<b>下午：</b>返回飯店取行李，搭車下山至小田原站。",
+                    "<b>18:00 後：</b>從**小田原站**搭乘JR東海道本線直達**橫濱站**，入住飯店與大行李會合。"
+                ],
+                tips: "利用周遊券可以無限次搭乘指定交通工具，請盡情享受！"
+            },
+            { 
+                day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子探索 🎡", icon: "🍜", accommodation: "橫濱",
+                details: [
+                    "<b>上午：</b>前往 <b>UNIQLO PARK</b>，讓孩子在巨大的溜滑梯遊樂場放電。",
+                    "<b>下午：</b>遊覽<b>港未來21</b>區域，可選擇參觀「日清杯麵博物館」或在「紅磚倉庫」散步。",
+                    "<b>傍晚：</b>欣賞橫濱港的夜景。"
+                ],
+                tips: "港未來區域開闊，適合推著嬰兒車悠閒散步。"
+            },
+            { 
+                day: 9, date: "8/01", weekday: "五", title: "古都與海岸線之旅 🌊", icon: "⛩️", accommodation: "橫濱",
+                details: [
+                    "<b>上午：</b>從橫濱搭乘JR橫須賀線至<b>鎌倉</b>，參觀鎌倉大佛與長谷寺。",
+                    "<b>中午：</b>在鎌倉車站周邊用餐。",
+                    "<b>下午：</b>搭乘復古的<b>「江之電」</b>，欣賞海岸線風光，前往<b>江之島</b>探險。",
+                    "<b>傍晚：</b>從江之島返回橫濱。"
+                ],
+                tips: "在經典的「鎌倉高校前」站下車拍張照，是《灌籃高手》的朝聖行程。"
+            },
+            { 
+                day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川煙火 🎇", icon: "🏙️", accommodation: "押上 (2晚)",
+                details: [
+                    "<b>上午：</b>在橫濱退房，可先將行李寄放飯店，在車站周邊做最後巡禮。",
+                    "<b>中午：</b>在橫濱用完午餐後，搭車前往東京<b>押上</b>的新飯店入住。",
+                    "<b>15:00 - 17:30：</b>【重要】<b>午睡休息時間</b>，為晚上儲備體力。",
+                    "<b>18:00 後：</b>輕鬆前往會場，準備觀賞<b>江戸川区花火大会</b>。"
+                ],
+                tips: "住在押上已具地理優勢，可研究搭乘都營新宿線至「篠崎站」前往會場。"
+            },
+            { 
+                day: 11, date: "8/03", weekday: "日", title: "晴空下的東京 🗼", icon: "🛍️", accommodation: "押上",
+                details: [
+                    "<b>上午：</b>以住宿點為中心，輕鬆遊覽<b>晴空塔 (Tokyo Skytree)</b>周邊。",
+                    "<b>選項：</b>可選擇登上晴空塔看風景，或參觀塔下的「墨田水族館」。",
+                    "<b>下午：</b>在「東京晴空街道」商場進行最後的採購，這裡有寶可夢中心等名店。",
+                    "<b>傍晚：</b>返回飯店休息並整理行李。"
+                ],
+                tips: "Solamachi商場是購買伴手禮和紀念品的一站式好去處。"
+            },
+            { 
+                day: 12, date: "8/04", weekday: "一", title: "滿載而歸 ✈️", icon: "🏠", accommodation: "-",
+                details: [
+                    "<b>上午：</b>悠閒享用早餐後，辦理飯店退房，並將行李寄放在櫃檯。",
+                    "<b>中午：</b>最後的自由時間，可在晴空塔或淺草地區做最後巡禮。",
+                    "<b>15:00 - 16:00：</b>返回飯店領取行李。",
+                    "<b>16:30 - 18:00：</b>從押上站搭乘<b>京成Access特快</b>直達成田機場。",
+                    "<b>18:00 後：</b>抵達機場，辦理登機手續，準備搭乘深夜航班回家。"
+                ],
+                tips: "從押上搭乘京成Access特快無需轉車，是前往成田機場最輕鬆的方式。"
+            },
+        ];
+
+        const tipsData = [
+            { 
+                title: "東京住宿策略：新橋 & 押上",
+                content: "本次旅程在東京分為兩站住宿，策略各有不同：<ul><li class='mt-2'><b>前期 (新橋)</b>：作為交通樞紐，方便前往 KidZania 及轉乘新幹線，以效率為主。</li><li class='mt-2'><b>後期 (押上)</b>：以觀光及機場交通便利性為主。緊鄰晴空塔，生活機能佳，且方便觀賞江戶川煙火，往返機場也有直達車。</li></ul>"
+            },
+            {
+                title: "伊豆的住宿與景點",
+                content: "<ul><li class='mt-2'><b>住宿點：</b>推薦住在離親子景點最近的「伊豆高原」，或是生活機能方便的「伊東溫泉」。</li><li class='mt-2'><b>親子景點：</b>「大室山」的火山口步道視野遼闊，「伊豆仙人掌動物公園」有可愛的水豚君泡溫泉，都是必訪亮點。</li></ul>"
+            },
+            {
+                title: "租車與交通策略",
+                content: "<ul><li class='mt-2'><b>租車區間：</b>在「熱海站」取車，並在「小田原站」還車，是效益最高的方案。</li><li class='mt-2'><b>行李宅配：</b>強烈建議在離開伊豆時，將大行李直接宅配至橫濱的飯店，以便在箱根輕裝行動。</li><li class='mt-2'><b>重要提醒：</b>務必提前預約<b>兒童安全座椅</b>。</li></ul>"
+            },
+            {
+                title: "箱根的玩法：箱根周遊券",
+                content: "在小田原還車後，請立即購買「箱根周遊券」。這張票券將是您在箱根地區所有交通（登山電車、纜車、海賊船、巴士）的通行證，是體驗箱根的最佳方式。"
+            },
+            {
+                title: "花火大會的交通與體力規劃",
+                content: "兩場煙火大會都是數十萬人等級的活動，交通將會極度擁擠。請務必提早規劃來回交通路線。特別是8/2日為移動日，下午在新飯店附近稍作休息，儲備好體力，才能好好享受晚上的煙火盛會。"
+            }
+        ];
+
+        const timelineContainer = document.getElementById('timeline');
+        itineraryData.forEach(item => {
+            const element = document.createElement('div');
+            element.classList.add('mb-8', 'flex', 'items-start');
+            let detailsHtml = item.details.map(detail => `<li>${detail}</li>`).join('');
+            
+            element.innerHTML = `
+                <div class="absolute w-12 h-12 bg-white border-4 border-teal-300 rounded-full -left-6 flex items-center justify-center text-2xl z-10">
+                    ${item.icon}
+                </div>
+                <div class="ml-16 w-full bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm font-medium text-teal-600">Day ${item.day} / ${item.date} (週${item.weekday})</p>
+                    <h3 class="text-xl font-bold mt-1">${item.title}</h3>
+                    <ul class="mt-4 text-stone-600 list-disc list-inside space-y-2">${detailsHtml}</ul>
+                    <div class="mt-4 p-3 bg-teal-50 text-teal-800 rounded-lg text-sm">
+                        <span class="font-bold">💡 親子提示：</span>${item.tips}
+                    </div>
+                </div>
+            `;
+            timelineContainer.appendChild(element);
+        });
+
+        const tipsContainer = document.getElementById('tips-accordion');
+        tipsData.forEach((tip, index) => {
+            const element = document.createElement('div');
+            element.classList.add('bg-white', 'rounded-xl', 'shadow');
+            element.innerHTML = `
+                <h2>
+                    <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-800" aria-expanded="false" aria-controls="accordion-content-${index}">
+                        <span class="text-lg font-bold">${tip.title}</span>
+                        <svg class="accordion-arrow w-6 h-6 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                </h2>
+                <div id="accordion-content-${index}" class="accordion-content">
+                    <div class="p-5 pt-0 text-stone-600">${tip.content}</div>
+                </div>
+            `;
+            tipsContainer.appendChild(element);
+        });
+
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', !isExpanded);
+                
+                const contentPanel = button.closest('h2').nextElementSibling;
+                if (contentPanel) {
+                    contentPanel.classList.toggle('is-open');
+                }
+            });
+        });
+
+        const ctx = document.getElementById('tripDistributionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['新橋 (東京)', '伊豆高原', '箱根', '橫濱', '押上 (東京)'],
+                datasets: [{
+                    label: '住宿夜數',
+                    data: [3, 2, 1, 3, 2],
+                    backgroundColor: [
+                        'rgba(63, 81, 181, 0.7)',  // 新橋: 都會藍
+                        'rgba(76, 175, 80, 0.7)',   // 伊豆: 大地綠
+                        'rgba(255, 152, 0, 0.7)',  // 箱根: 溫泉橘
+                        'rgba(0, 188, 212, 0.7)',   // 橫濱: 海洋青
+                        'rgba(121, 134, 203, 0.7)' // 押上: 天空藍
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' 晚';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
