@@ -33,7 +33,7 @@
         .accordion-button[aria-expanded="true"] .accordion-arrow {
             transform: rotate(180deg);
         }
-        .accordion-button[aria-expanded="true"] + .accordion-content {
+        .accordion-content.is-open {
             max-height: 1000px;
         }
     </style>
@@ -192,6 +192,11 @@
             button.addEventListener('click', () => {
                 const isExpanded = button.getAttribute('aria-expanded') === 'true';
                 button.setAttribute('aria-expanded', !isExpanded);
+                
+                const contentPanel = button.closest('h2').nextElementSibling;
+                if (contentPanel) {
+                    contentPanel.classList.toggle('is-open');
+                }
             });
         });
 
