@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>東京親子夏日12日遊 (詳細版)</title>
+    <title>東京親子夏日12日遊</title>
     <!-- Chosen Palette: Calm Journey (based on neutrals like stone/beige with a soft teal accent) -->
     <!-- Application Structure Plan: A single-page dashboard design with a top navigation for smooth scrolling. The structure includes: 1) An 'Overview' section with key stats and a pie chart for a quick grasp of the trip's distribution. 2) An interactive 'Daily Itinerary' timeline for easy day-by-day exploration. 3) A 'Key Tips' section using an accordion to organize planning advice. This structure was chosen to transform the linear report into a multi-faceted, non-linear exploratory experience, allowing users to either follow the timeline chronologically or jump directly to specific planning topics, enhancing usability. -->
     <!-- Visualization & Content Choices: 1) Trip Distribution: Goal=Inform -> Pie Chart (Chart.js/Canvas) -> Shows time spent per city -> Justification: Provides an immediate high-level understanding of the trip's focus. 2) Daily Itinerary: Goal=Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Presents daily activities with icons -> Justification: More engaging and scannable than a static table. 3) Planning Advice: Goal=Inform -> Accordion (HTML/CSS/JS) -> Organizes detailed tips into collapsible sections -> Justification: Prevents information overload and allows users to focus on one topic at a time. -->
@@ -132,7 +132,8 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         const itineraryData = [
-            { day: 1, date: "7/24", weekday: "四", title: "抵達東京，舒適入住 🌃", icon: "✈️", accommodation: "新橋 (3晚)", 
+            { 
+                day: 1, date: "7/24", weekday: "四", title: "抵達東京，舒適入住 🌃", icon: "✈️", accommodation: "新橋 (3晚)", 
                 details: [
                     "<b>19:55：</b>班機準時抵達成田機場 (NRT)。",
                     "<b>20:00 - 21:30：</b>辦理入境審查、領取行李、過海關。",
@@ -175,14 +176,14 @@
                 tips: "從品川搭車比東京車站更方便，車站結構較單純。"
             },
             { 
-                day: 5, date: "7/28", weekday: "一", title: "火山與動物的奇幻樂園 🌋", icon: "🌵", accommodation: "伊豆高原",
+                day: 5, date: "7/28", weekday: "一", title: "火山、動物與海岸奇觀 🌋", icon: "�", accommodation: "伊豆高原",
                 details: [
                     "<b>上午：</b>自駕前往<b>大室山</b>，搭乘登山吊椅上山頂，在火山口步道散步。",
                     "<b>中午：</b>在大室山下的餐廳區用餐。",
-                    "<b>下午：</b>探索隔壁的<b>伊豆仙人掌動物公園</b>，與水豚君等可愛動物近距離互動。",
-                    "<b>17:00：</b>開車返回飯店休息。"
+                    "<b>下午：</b>探索<b>伊豆仙人掌動物公園</b>，與水豚君近距離互動，接著前往<b>城崎海岸</b>，欣賞壯觀的吊橋與岩岸風光。",
+                    "<b>17:30：</b>開車返回飯店休息。"
                 ],
-                tips: "大室山山頂非常開闊，適合讓孩子小跑步活動，但需注意安全。"
+                tips: "城崎海岸的步道部分路段較為崎嶇，請牽好孩子的手。門脇吊橋是必訪的拍照點。"
             },
             { 
                 day: 6, date: "7/29", weekday: "二", title: "告別伊豆，前進箱根溫泉鄉", icon: "♨️", accommodation: "箱根 (1晚)",
@@ -427,3 +428,4 @@
 
 </body>
 </html>
+�
