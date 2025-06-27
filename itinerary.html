@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>東京親子夏日12日遊</title>
-    <!-- Chosen Palette: Calm Journey (based on neutrals like stone/beige with a soft teal accent) -->
-    <!-- Application Structure Plan: A single-page dashboard design with a top navigation for smooth scrolling. The structure includes: 1) An 'Overview' section with key stats and a pie chart for a quick grasp of the trip's distribution. 2) An interactive 'Daily Itinerary' timeline for easy day-by-day exploration. 3) A 'Key Tips' section using an accordion to organize planning advice. This structure was chosen to transform the linear report into a multi-faceted, non-linear exploratory experience, allowing users to either follow the timeline chronologically or jump directly to specific planning topics, enhancing usability. -->
-    <!-- Visualization & Content Choices: 1) Trip Distribution: Goal=Inform -> Pie Chart (Chart.js/Canvas) -> Shows time spent per city -> Justification: Provides an immediate high-level understanding of the trip's focus. 2) Daily Itinerary: Goal=Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Presents daily activities with icons -> Justification: More engaging and scannable than a static table. 3) Planning Advice: Goal=Inform -> Accordion (HTML/CSS/JS) -> Organizes detailed tips into collapsible sections -> Justification: Prevents information overload and allows users to focus on one topic at a time. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,12 +116,12 @@
 
         const itineraryData = [
             { day: 1, date: "7/24", weekday: "四", title: "抵達東京，入住新橋", icon: "✈️", accommodation: "新橋 (3晚)", activities: "抵達東京機場，搭乘機場交通前往新橋飯店 Check-in，熟悉周邊環境。" },
-            { day: 2, date: "7/25", weekday: "五", title: "小小職人體驗日", icon: "👷", accommodation: "新橋", activities: "前往 LaLaport 豐洲，讓孩子體驗 KidZania，大人也可在商場逛街。" },
+            { day: 2, date: "7/25", weekday: "五", title: "LaLaport 購物 & KidZania 職人體驗", icon: "👷", accommodation: "新橋", activities: "上午先在 LaLaport 豐洲購物中心逛街用餐，下午參加已預約的 KidZania 第二部(下午場)，讓孩子體驗各種職業的樂趣。" },
             { day: 3, date: "7/26", weekday: "六", title: "動物園與隅田川花火", icon: "🎆", accommodation: "新橋", activities: "上午參觀上野動物園，晚上欣賞盛大的隅田川花火大會。" },
-            { day: 4, date: "7/27", weekday: "日", title: "前進伊豆，開啟自駕之旅", icon: "🚗", accommodation: "伊豆高原 (2晚)", activities: "從東京搭電車至熱海/小田原，開始租車，開往伊豆高原的住宿點。" },
+            { day: 4, date: "7/27", weekday: "日", title: "前進伊豆，開啟自駕之旅", icon: "🚗", accommodation: "伊豆高原 (2晚)", activities: "從東京搭電車至熱海，開始租車，開往伊豆高原的住宿點。" },
             { day: 5, date: "7/28", weekday: "一", title: "伊豆半島親子探險", icon: "🌵", accommodation: "伊豆高原", activities: "全日自駕遊覽伊豆，參觀大室山與伊豆仙人掌動物公園。" },
             { day: 6, date: "7/29", weekday: "二", title: "深入箱根，入住溫泉鄉", icon: "♨️", accommodation: "箱根 (1晚)", activities: "從伊豆自駕至箱根，入住溫泉飯店，下午開始悠閒遊覽箱根。" },
-            { day: 7, date: "7/30", weekday: "三", title: "箱根全覽，奔向橫濱", icon: "🚢", accommodation: "橫濱 (3晚)", activities: "繼續箱根行程。傍晚開車前往橫濱還車，並入住飯店。" },
+            { day: 7, date: "7/30", weekday: "三", title: "箱根交通工具全制霸", icon: "🚢", accommodation: "橫濱 (3晚)", activities: "將車停在飯店，體驗箱根環狀線所有交通工具。傍晚取車前往橫濱還車，並入住飯店。" },
             { day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子景點", icon: "🎡", accommodation: "橫濱", activities: "遊覽橫濱市區，前往 UNIQLO PARK 及港未來區。" },
             { day: 9, date: "8/01", weekday: "五", title: "古都與島嶼的慢活", icon: "⛩️", accommodation: "橫濱", activities: "從橫濱搭乘電車進行鎌倉、江之島一日遊。" },
             { day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川花火", icon: "🎇", accommodation: "押上 (2晚)", activities: "從橫濱退房，移動至東京押上飯店。下午稍作休息，晚上觀賞江戶川區花火大會。" },
@@ -144,11 +140,11 @@
             },
             {
                 title: "租車與自駕提醒",
-                content: "<ul><li class='mt-2'><b>取車點：</b>建議在「熱海站」或「小田原站」取車。</li><li class='mt-2'><b>還車點：</b>依計畫在「橫濱市區」的據點還車。</li><li class='mt-2'><b>重要提醒：</b>務必提前預約<b>兒童安全座椅</b>。</li></ul>"
+                content: "<ul><li class='mt-2'><b>取車點：</b>建議在「熱海站」取車。</li><li class='mt-2'><b>還車點：</b>依計畫在「橫濱市區」的據點還車。</li><li class='mt-2'><b>重要提醒：</b>務必提前預約<b>兒童安全座椅</b>。</li></ul>"
             },
             {
                 title: "箱根的玩法：停車轉乘 (Park and Ride)",
-                content: "在箱根期間，建議採用「停車轉乘」策略。將車停在飯店或大型轉乘站（如桃源台），再購買「箱根周遊券」搭乘登山電車、纜車、海賊船等特色交通工具，這樣才能完整體驗箱根的樂趣，也避免在山區小路開車的麻煩。"
+                content: "在箱根期間，建議採用「停車轉乘」策略。將車停在飯店或大型轉乘站（如強羅），再購買「箱根周遊券」搭乘登山電車、纜車、海賊船等特色交通工具，這樣才能完整體驗箱根的樂趣，也避免在山區小路開車的麻煩。"
             },
             {
                 title: "花火大會的交通與體力規劃",
