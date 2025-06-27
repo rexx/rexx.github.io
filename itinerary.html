@@ -13,10 +13,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            background-color: #f8f7f5;
         }
         .chart-container {
             position: relative;
@@ -38,17 +45,23 @@
         }
     </style>
 </head>
-<body class="text-stone-800">
+<body class="bg-stone-100 dark:bg-gray-900 text-stone-800 dark:text-stone-200">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <h1 class="text-xl md:text-2xl font-bold text-teal-800">東京親子夏日之旅</h1>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#overview" class="font-medium text-stone-600 hover:text-teal-600 transition">行程總覽</a>
-                    <a href="#itinerary" class="font-medium text-stone-600 hover:text-teal-600 transition">每日行程</a>
-                    <a href="#tips" class="font-medium text-stone-600 hover:text-teal-600 transition">規劃建議</a>
-                </nav>
+                <h1 class="text-xl md:text-2xl font-bold text-teal-800 dark:text-teal-300">東京親子夏日之旅</h1>
+                <div class="flex items-center">
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="#overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程總覽</a>
+                        <a href="#itinerary" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">每日行程</a>
+                        <a href="#tips" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">規劃建議</a>
+                    </nav>
+                    <button id="theme-toggle" type="button" class="ml-6 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-stone-200 dark:focus:ring-gray-700 rounded-lg text-xl p-2.5">
+                        <span id="theme-toggle-dark-icon" class="hidden">🌙</span>
+                        <span id="theme-toggle-light-icon" class="hidden">☀️</span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -57,35 +70,35 @@
 
         <section id="overview" class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-2">行程總覽</h2>
-            <p class="text-center text-stone-600 mb-8 max-w-2xl mx-auto">
+            <p class="text-center text-stone-600 dark:text-stone-400 mb-8 max-w-2xl mx-auto">
                 這是一份為期12天的家庭夏日旅程最終版計畫。我們將探索東京、伊豆、箱根與橫濱，並參加兩場盛大的煙火大會，創造最豐富多元的回憶。
             </p>
 
             <div class="grid md:grid-cols-2 gap-8 items-center">
                 <div class="grid grid-cols-2 gap-4 text-center">
-                    <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
                         <div class="text-4xl mb-2">👨‍👩‍👧</div>
                         <h3 class="font-bold text-lg">旅遊成員</h3>
-                        <p class="text-stone-600">2位大人, 1位小孩 (4歲)</p>
+                        <p class="text-stone-600 dark:text-stone-400">2位大人, 1位小孩 (4歲)</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
                         <div class="text-4xl mb-2">📅</div>
                         <h3 class="font-bold text-lg">旅遊期間</h3>
-                        <p class="text-stone-600">12天11夜</p>
+                        <p class="text-stone-600 dark:text-stone-400">12天11夜</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
                         <div class="text-4xl mb-2">🚗</div>
                         <h3 class="font-bold text-lg">交通方式</h3>
-                        <p class="text-stone-600">電車、地鐵與自駕</p>
+                        <p class="text-stone-600 dark:text-stone-400">電車、地鐵與自駕</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
                         <div class="text-4xl mb-2">🎆</div>
                         <h3 class="font-bold text-lg">夏日重點</h3>
-                        <p class="text-stone-600">兩場花火大會</p>
+                        <p class="text-stone-600 dark:text-stone-400">兩場花火大會</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
                     <h3 class="text-xl font-bold text-center mb-4">各地區住宿夜數分佈</h3>
                     <div class="chart-container">
                         <canvas id="tripDistributionChart"></canvas>
@@ -96,7 +109,7 @@
 
         <section id="itinerary" class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-8">每日行程時間軸</h2>
-            <div id="timeline" class="relative border-l-2 border-teal-200 ml-6 md:ml-0">
+            <div id="timeline" class="relative border-l-2 border-teal-200 dark:border-teal-700 ml-6 md:ml-0">
             </div>
         </section>
 
@@ -108,7 +121,7 @@
 
     </main>
     
-    <footer class="bg-stone-800 text-white mt-12">
+    <footer class="bg-gray-800 text-stone-300 mt-12">
         <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
             <p>祝您旅途愉快！</p>
         </div>
@@ -119,8 +132,7 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         const itineraryData = [
-            { 
-                day: 1, date: "7/24", weekday: "四", title: "抵達東京，舒適入住 🌃", icon: "✈️", accommodation: "新橋 (3晚)", 
+            { day: 1, date: "7/24", weekday: "四", title: "抵達東京，舒適入住 🌃", icon: "✈️", accommodation: "新橋 (3晚)", 
                 details: [
                     "<b>19:55：</b>班機準時抵達成田機場 (NRT)。",
                     "<b>20:00 - 21:30：</b>辦理入境審查、領取行李、過海關。",
@@ -173,7 +185,7 @@
                 tips: "大室山山頂非常開闊，適合讓孩子小跑步活動，但需注意安全。"
             },
             { 
-                day: 6, date: "7/29", weekday: "二", title: "告別伊豆，輕裝前往箱根 ♨️", icon: "🎒", accommodation: "箱根 (1晚)",
+                day: 6, date: "7/29", weekday: "二", title: "告別伊豆，前進箱根溫泉鄉", icon: "♨️", accommodation: "箱根 (1晚)",
                 details: [
                     "<b>上午：</b>在伊豆飯店退房，並辦理<b>行李宅配</b>，將大行李直接寄往橫濱的飯店。",
                     "<b>10:30 - 12:30：</b>輕裝開車，從伊豆高原前往<b>小田原</b>。",
@@ -227,7 +239,7 @@
                 details: [
                     "<b>上午：</b>以住宿點為中心，輕鬆遊覽<b>晴空塔 (Tokyo Skytree)</b>周邊。",
                     "<b>選項：</b>可選擇登上晴空塔看風景，或參觀塔下的「墨田水族館」。",
-                    "<b>下午：</b>在「東京晴空街道」商場進行最後的採購，這裡有寶可夢中心等名店。",
+                    "<b>下午：</b>在「東京晴空街道 (Tokyo Solamachi)」商場進行最後的採購，這裡有寶可夢中心等名店。",
                     "<b>傍晚：</b>返回飯店休息並整理行李。"
                 ],
                 tips: "Solamachi商場是購買伴手禮和紀念品的一站式好去處。"
@@ -275,14 +287,14 @@
             let detailsHtml = item.details.map(detail => `<li>${detail}</li>`).join('');
             
             element.innerHTML = `
-                <div class="absolute w-12 h-12 bg-white border-4 border-teal-300 rounded-full -left-6 flex items-center justify-center text-2xl z-10">
+                <div class="absolute w-12 h-12 bg-white dark:bg-gray-800 border-4 border-teal-300 dark:border-teal-700 rounded-full -left-6 flex items-center justify-center text-2xl z-10">
                     ${item.icon}
                 </div>
-                <div class="ml-16 w-full bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
-                    <p class="text-sm font-medium text-teal-600">Day ${item.day} / ${item.date} (週${item.weekday})</p>
+                <div class="ml-16 w-full bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm font-medium text-teal-600 dark:text-teal-400">Day ${item.day} / ${item.date} (週${item.weekday})</p>
                     <h3 class="text-xl font-bold mt-1">${item.title}</h3>
-                    <ul class="mt-4 text-stone-600 list-disc list-inside space-y-2">${detailsHtml}</ul>
-                    <div class="mt-4 p-3 bg-teal-50 text-teal-800 rounded-lg text-sm">
+                    <ul class="mt-4 text-stone-600 dark:text-stone-300 list-disc list-inside space-y-2">${detailsHtml}</ul>
+                    <div class="mt-4 p-3 bg-teal-50 dark:bg-gray-700 text-teal-800 dark:text-teal-300 rounded-lg text-sm">
                         <span class="font-bold">💡 親子提示：</span>${item.tips}
                     </div>
                 </div>
@@ -293,16 +305,16 @@
         const tipsContainer = document.getElementById('tips-accordion');
         tipsData.forEach((tip, index) => {
             const element = document.createElement('div');
-            element.classList.add('bg-white', 'rounded-xl', 'shadow');
+            element.classList.add('bg-white', 'dark:bg-gray-800', 'rounded-xl', 'shadow');
             element.innerHTML = `
                 <h2>
-                    <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-800" aria-expanded="false" aria-controls="accordion-content-${index}">
+                    <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-stone-800 dark:text-stone-200" aria-expanded="false" aria-controls="accordion-content-${index}">
                         <span class="text-lg font-bold">${tip.title}</span>
                         <svg class="accordion-arrow w-6 h-6 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                 </h2>
                 <div id="accordion-content-${index}" class="accordion-content">
-                    <div class="p-5 pt-0 text-stone-600">${tip.content}</div>
+                    <div class="p-5 pt-0 text-stone-600 dark:text-stone-400">${tip.content}</div>
                 </div>
             `;
             tipsContainer.appendChild(element);
@@ -320,8 +332,10 @@
             });
         });
 
+        Chart.defaults.color = document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151';
+
         const ctx = document.getElementById('tripDistributionChart').getContext('2d');
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: ['新橋 (東京)', '伊豆高原', '箱根', '橫濱', '押上 (東京)'],
@@ -335,7 +349,7 @@
                         'rgba(0, 188, 212, 0.7)',   // 橫濱: 海洋青
                         'rgba(121, 134, 203, 0.7)' // 押上: 天空藍
                     ],
-                    borderColor: '#fff',
+                    borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
                     borderWidth: 2
                 }]
             },
@@ -345,6 +359,9 @@
                 plugins: {
                     legend: {
                         position: 'bottom',
+                        labels: {
+                           color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151',
+                        }
                     },
                     tooltip: {
                         callbacks: {
@@ -362,6 +379,48 @@
                     }
                 }
             }
+        });
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            themeToggleLightIcon.classList.remove('hidden');
+            document.documentElement.classList.add('dark');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+
+            // Update chart colors
+            const isDark = document.documentElement.classList.contains('dark');
+            Chart.defaults.color = isDark ? '#e5e7eb' : '#374151';
+            chart.options.plugins.legend.labels.color = isDark ? '#e5e7eb' : '#374151';
+            chart.data.datasets[0].borderColor = isDark ? '#1f2937' : '#ffffff';
+            chart.update();
         });
     });
 </script>
