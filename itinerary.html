@@ -53,9 +53,10 @@
                 <h1 class="text-xl md:text-2xl font-bold text-teal-800 dark:text-teal-300">東京親子夏日之旅</h1>
                 <div class="flex items-center">
                     <nav class="hidden md:flex space-x-8">
+                        <a href="#glance" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程快覽</a>
                         <a href="#itinerary" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">每日行程</a>
                         <a href="#tips" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">規劃建議</a>
-                        <a href="#overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程總覽</a>
+                        <a href="#overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">數據總覽</a>
                     </nav>
                     <button id="theme-toggle" type="button" class="ml-6 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-stone-200 dark:focus:ring-gray-700 rounded-lg text-xl p-2.5">
                         <span id="theme-toggle-dark-icon" class="hidden">🌙</span>
@@ -74,14 +75,33 @@
         </div>
         <div id="mobile-menu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                 <a href="#glance" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">行程快覽</a>
                 <a href="#itinerary" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">每日行程</a>
                 <a href="#tips" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">規劃建議</a>
-                <a href="#overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">行程總覽</a>
+                <a href="#overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">數據總覽</a>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="glance" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">十二日行程快覽</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 1 | 7/24</p><p class="text-3xl my-2">🏙️</p><p class="font-semibold">東京 (新橋)</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 2 | 7/25</p><p class="text-3xl my-2">🏙️</p><p class="font-semibold">東京 (新橋)</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 3 | 7/26</p><p class="text-3xl my-2">🏙️</p><p class="font-semibold">東京 (新橋)</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 4 | 7/27</p><p class="text-3xl my-2">🚗</p><p class="font-semibold">伊豆高原</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 5 | 7/28</p><p class="text-3xl my-2">🌵</p><p class="font-semibold">伊豆高原</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 6 | 7/29</p><p class="text-3xl my-2">♨️</p><p class="font-semibold">箱根</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 7 | 7/30</p><p class="text-3xl my-2">🌉</p><p class="font-semibold">橫濱</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 8 | 7/31</p><p class="text-3xl my-2">🌉</p><p class="font-semibold">橫濱</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 9 | 8/01</p><p class="text-3xl my-2">🌉</p><p class="font-semibold">橫濱</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 10 | 8/02</p><p class="text-3xl my-2">🗼</p><p class="font-semibold">東京 (押上)</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 11 | 8/03</p><p class="text-3xl my-2">🗼</p><p class="font-semibold">東京 (押上)</p></div>
+                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"><p class="text-xs text-gray-500 dark:text-gray-400">Day 12 | 8/04</p><p class="text-3xl my-2">✈️</p><p class="font-semibold">準備回程</p></div>
+            </div>
+        </section>
 
         <section id="itinerary" class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-8">每日行程時間軸</h2>
@@ -96,7 +116,7 @@
         </section>
 
         <section id="overview">
-            <h2 class="text-3xl font-bold text-center mb-2">行程數據總覽</h2>
+            <h2 class="text-3xl font-bold text-center mb-2">數據總覽</h2>
             <p class="text-center text-stone-600 dark:text-stone-400 mb-8 max-w-2xl mx-auto">
                 這趟旅程橫跨4大區域，結合都會、自然與文化體驗，並包含兩場夏季限定的煙火大會。
             </p>
