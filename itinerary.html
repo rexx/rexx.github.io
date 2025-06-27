@@ -53,10 +53,10 @@
                 <h1 class="text-xl md:text-2xl font-bold text-teal-800 dark:text-teal-300">東京親子夏日之旅</h1>
                 <div class="flex items-center">
                     <nav class="hidden md:flex space-x-8">
-                        <a href="#glance" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程快覽</a>
+                        <a href="#itinerary-overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程總覽</a>
                         <a href="#itinerary" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">每日行程</a>
                         <a href="#tips" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">規劃建議</a>
-                        <a href="#overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">數據總覽</a>
+                        <a href="#data-overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">總覽</a>
                     </nav>
                     <button id="theme-toggle" type="button" class="ml-6 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-stone-200 dark:focus:ring-gray-700 rounded-lg text-xl p-2.5">
                         <span id="theme-toggle-dark-icon" class="hidden">🌙</span>
@@ -75,24 +75,24 @@
         </div>
         <div id="mobile-menu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                 <a href="#glance" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">行程快覽</a>
+                <a href="#itinerary-overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">行程總覽</a>
                 <a href="#itinerary" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">每日行程</a>
                 <a href="#tips" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">規劃建議</a>
-                <a href="#overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">數據總覽</a>
+                <a href="#data-overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">總覽</a>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-        <section id="glance" class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">十二日行程快覽</h2>
-            <div id="glance-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        <section id="itinerary-overview" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">行程總覽</h2>
+            <div id="overview-list" class="space-y-3 max-w-4xl mx-auto">
             </div>
         </section>
 
         <section id="itinerary" class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">每日行程時間軸</h2>
+            <h2 class="text-3xl font-bold text-center mb-8">每日行程詳情</h2>
             <div id="timeline" class="relative border-l-2 border-teal-200 dark:border-teal-700 ml-4 md:ml-0">
             </div>
         </section>
@@ -103,8 +103,8 @@
             </div>
         </section>
 
-        <section id="overview">
-            <h2 class="text-3xl font-bold text-center mb-2">數據總覽</h2>
+        <section id="data-overview">
+            <h2 class="text-3xl font-bold text-center mb-2">總覽</h2>
             <p class="text-center text-stone-600 dark:text-stone-400 mb-8 max-w-2xl mx-auto">
                 這趟旅程橫跨4大區域，結合都會、自然與文化體驗，並包含兩場夏季限定的煙火大會。
             </p>
@@ -304,16 +304,21 @@
             }
         ];
         
-        const glanceGrid = document.getElementById('glance-grid');
+        const overviewList = document.getElementById('overview-list');
         itineraryData.forEach(item => {
-            const glanceElement = document.createElement('div');
-            glanceElement.className = "bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center";
-            glanceElement.innerHTML = `
-                <p class="text-xs text-gray-500 dark:text-gray-400">Day ${item.day} | ${item.date} (週${item.weekday})</p>
-                <p class="text-3xl my-2">${item.icon}</p>
-                <p class="font-semibold">${item.location}</p>
+            const overviewElement = document.createElement('div');
+            overviewElement.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow";
+            overviewElement.innerHTML = `
+                <div class="font-semibold">
+                    <span class="text-teal-600 dark:text-teal-400">Day ${item.day}</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"> | ${item.date} (週${item.weekday})</span>
+                </div>
+                <div class="flex items-center space-x-3 text-right">
+                    <span class="font-semibold">${item.location}</span>
+                    <span class="text-2xl">${item.icon}</span>
+                </div>
             `;
-            glanceGrid.appendChild(glanceElement);
+            overviewList.appendChild(overviewElement);
         });
 
         const timelineContainer = document.getElementById('timeline');
