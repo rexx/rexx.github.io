@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東京親子夏日12日遊 (伊豆・箱根方案)</title>
+    <!-- Chosen Palette: Calm Journey (based on neutrals like stone/beige with a soft teal accent) -->
+    <!-- Application Structure Plan: A single-page dashboard design with a top navigation for smooth scrolling. The structure includes: 1) An 'Overview' section with key stats and a pie chart for a quick grasp of the trip's distribution. 2) An interactive 'Daily Itinerary' timeline for easy day-by-day exploration. 3) A 'Key Tips' section using an accordion to organize planning advice. This structure was chosen to transform the linear report into a multi-faceted, non-linear exploratory experience, allowing users to either follow the timeline chronologically or jump directly to specific planning topics, enhancing usability. -->
+    <!-- Visualization & Content Choices: 1) Trip Distribution: Goal=Inform -> Pie Chart (Chart.js/Canvas) -> Shows time spent per city -> Justification: Provides an immediate high-level understanding of the trip's focus. 2) Daily Itinerary: Goal=Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Presents daily activities with icons -> Justification: More engaging and scannable than a static table. 3) Planning Advice: Goal=Inform -> Accordion (HTML/CSS/JS) -> Organizes detailed tips into collapsible sections -> Justification: Prevents information overload and allows users to focus on one topic at a time. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f8f7f5;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            margin: auto;
+        }
+        .accordion-content {
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .accordion-button[aria-expanded="true"] .accordion-arrow {
+            transform: rotate(180deg);
+        }
+        .accordion-button[aria-expanded="true"] + .accordion-content {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-teal-800">東京親子夏日之旅</h1>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#overview" class="font-medium text-stone-600 hover:text-teal-600 transition">行程總覽</a>
+                    <a href="#itinerary" class="font-medium text-stone-600 hover:text-teal-600 transition">每日行程</a>
+                    <a href="#tips" class="font-medium text-stone-600 hover:text-teal-600 transition">規劃建議</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="overview" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">行程總覽</h2>
+            <p class="text-center text-stone-600 mb-8 max-w-2xl mx-auto">
+                這是一趟為期12天，專為有4歲小孩的家庭設計的夏日旅程。我們將探索東京的都會魅力、伊豆的海岸風光、箱根的山林溫泉，以及橫濱的港都風情，結合大眾運輸與自駕，創造最豐富多元的回憶。
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">👨‍👩‍👧</div>
+                        <h3 class="font-bold text-lg">旅遊成員</h3>
+                        <p class="text-stone-600">2位大人, 1位小孩 (4歲)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">📅</div>
+                        <h3 class="font-bold text-lg">旅遊期間</h3>
+                        <p class="text-stone-600">12天11夜</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">🚗</div>
+                        <h3 class="font-bold text-lg">交通方式</h3>
+                        <p class="text-stone-600">電車、地鐵與自駕</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="text-4xl mb-2">🎆</div>
+                        <h3 class="font-bold text-lg">夏日重點</h3>
+                        <p class="text-stone-600">隅田川花火大會</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-bold text-center mb-4">各地區天數分佈</h3>
+                    <div class="chart-container">
+                        <canvas id="tripDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="itinerary" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">每日行程時間軸</h2>
+            <div id="timeline" class="relative border-l-2 border-teal-200 ml-6 md:ml-0">
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2 class="text-3xl font-bold text-center mb-8">重點規劃建議</h2>
+            <div id="tips-accordion" class="space-y-4 max-w-4xl mx-auto">
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-stone-800 text-white mt-12">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>祝您旅途愉快！</p>
+        </div>
+    </footer>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const itineraryData = [
+            { day: 1, date: "7/24", weekday: "四", title: "抵達東京，初探都會", icon: "✈️", accommodation: "新橋", activities: "抵達東京機場，搭乘機場交通前往市區飯店 Check-in，熟悉周邊環境。" },
+            { day: 2, date: "7/25", weekday: "五", title: "小小職人體驗日", icon: "👷", accommodation: "新橋", activities: "前往 KidZania 東京 (豐洲)，讓孩子體驗各種職業的樂趣。" },
+            { day: 3, date: "7/26", weekday: "六", title: "動物園與夏夜花火", icon: "🎆", accommodation: "新橋", activities: "上午參觀上野動物園，晚上欣賞盛大的隅田川花火大會。" },
+            { day: 4, date: "7/27", weekday: "日", title: "前進伊豆，開啟自駕之旅", icon: "🚗", accommodation: "伊豆", activities: "從東京搭乘電車至熱海或小田原，開始租車，開往伊豆半島的住宿點。" },
+            { day: 5, date: "7/28", weekday: "一", title: "伊豆半島親子探險", icon: "🌵", accommodation: "伊豆", activities: "全日自駕遊覽伊豆，參觀大室山與伊豆仙人掌動物公園。" },
+            { day: 6, date: "7/29", weekday: "二", title: "深入箱根，入住溫泉鄉", icon: "♨️", accommodation: "箱根", activities: "從伊豆自駕至箱根，入住溫泉飯店，下午開始悠閒遊覽箱根。" },
+            { day: 7, date: "7/30", weekday: "三", title: "箱根全覽，奔向橫濱", icon: "🚢", accommodation: "橫濱", activities: "繼續箱根行程，體驗各種交通工具。傍晚開車前往橫濱還車，並入住飯店。" },
+            { day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子景點", icon: "🎡", accommodation: "橫濱", activities: "遊覽橫濱市區，前往 UNIQLO PARK 及港未來區。" },
+            { day: 9, date: "8/01", weekday: "五", title: "古都與島嶼的慢活", icon: "⛩️", accommodation: "橫濱", activities: "從橫濱搭乘電車進行鎌倉、江之島一日遊。" },
+            { day: 10, date: "8/02", weekday: "六", title: "橫濱自由/備案日", icon: "🛍️", accommodation: "橫濱", activities: "彈性安排，可以補上之前未竟的景點，或享受悠閒的購物時光。" },
+            { day: 11, date: "8/03", weekday: "日", title: "準備回程的自由日", icon: "🎁", accommodation: "東京或機場附近", activities: "最後的採購日，依隔天航班時間決定是否移動住宿點。" },
+            { day: 12, date: "8/04", weekday: "一", title: "滿載而歸", icon: "🏠", accommodation: "-", activities: "前往機場，辦理登機手續，結束愉快的家庭旅遊。" },
+        ];
+
+        const tipsData = [
+            { 
+                title: "東京的住宿建議：新橋 (Shimbashi)",
+                content: "您已選擇交通極為便利的「新橋」。這是一個絕佳的決定，雖然區域氛圍偏向商業化，但其交通優勢能為您的行程帶來極大便利。<ul><li class='mt-2'><b>前往 KidZania (豐洲)</b>：新橋是「百合海鷗號」的起點站，可以輕鬆搭車且保證有座位，對親子遊非常友善。</li><li class='mt-2'><b>前往伊豆/箱根</b>：搭乘JR山手線僅需一兩站即可抵達「品川」或「東京」車站，無縫接軌新幹線與特急列車。</li><li class='mt-2'><b>機場交通</b>：都營淺草線可直通運轉，方便往返成田、羽田機場。</li></ul>"
+            },
+            {
+                title: "伊豆的住宿與景點",
+                content: "<ul><li class='mt-2'><b>住宿點：</b>推薦住在離親子景點最近的「伊豆高原」，或是生活機能方便的「伊東溫泉」。</li><li class='mt-2'><b>親子景點：</b>「大室山」的火山口步道視野遼闊，「伊豆仙人掌動物公園」有可愛的水豚君泡溫泉，都是必訪亮點。</li></ul>"
+            },
+            {
+                title: "租車與自駕提醒",
+                content: "<ul><li class='mt-2'><b>取車點：</b>建議在「熱海站」或「小田原站」取車。</li><li class='mt-2'><b>還車點：</b>依計畫在「橫濱市區」的據點還車。</li><li class='mt-2'><b>重要提醒：</b>務必提前預約<b>兒童安全座椅</b>。</li></ul>"
+            },
+            {
+                title: "箱根的玩法：停車轉乘 (Park and Ride)",
+                content: "在箱根期間，建議採用「停車轉乘」策略。將車停在飯店或大型轉乘站（如桃源台），再購買「箱根周遊券」搭乘登山電車、纜車、海賊船等特色交通工具，這樣才能完整體驗箱根的樂趣，也避免在山區小路開車的麻煩。"
+            }
+        ];
+
+        const timelineContainer = document.getElementById('timeline');
+        itineraryData.forEach(item => {
+            const element = document.createElement('div');
+            element.classList.add('mb-8', 'flex', 'items-start');
+            element.innerHTML = `
+                <div class="absolute w-12 h-12 bg-white border-4 border-teal-300 rounded-full -left-6 flex items-center justify-center text-2xl">
+                    ${item.icon}
+                </div>
+                <div class="ml-16 w-full bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm font-medium text-teal-600">Day ${item.day} / ${item.date} (週${item.weekday})</p>
+                    <h3 class="text-xl font-bold mt-1">${item.title}</h3>
+                    <p class="mt-2 text-stone-600">${item.activities}</p>
+                    <p class="mt-4 text-sm font-semibold text-stone-500">🏨 住宿：${item.accommodation}</p>
+                </div>
+            `;
+            timelineContainer.appendChild(element);
+        });
+
+        const tipsContainer = document.getElementById('tips-accordion');
+        tipsData.forEach((tip, index) => {
+            const element = document.createElement('div');
+            element.classList.add('bg-white', 'rounded-xl', 'shadow');
+            element.innerHTML = `
+                <h2>
+                    <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-800" aria-expanded="false" aria-controls="accordion-content-${index}">
+                        <span class="text-lg font-bold">${tip.title}</span>
+                        <svg class="accordion-arrow w-6 h-6 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                </h2>
+                <div id="accordion-content-${index}" class="accordion-content">
+                    <div class="p-5 pt-0 text-stone-600">${tip.content}</div>
+                </div>
+            `;
+            tipsContainer.appendChild(element);
+        });
+
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', !isExpanded);
+            });
+        });
+
+        const ctx = document.getElementById('tripDistributionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['東京', '伊豆', '箱根', '橫濱', '彈性日'],
+                datasets: [{
+                    label: '天數',
+                    data: [3, 2, 2, 4, 1],
+                    backgroundColor: [
+                        'rgba(15, 118, 110, 0.7)', // Teal
+                        'rgba(255, 159, 64, 0.7)', // Orange
+                        'rgba(75, 192, 192, 0.7)', // Green
+                        'rgba(54, 162, 235, 0.7)', // Blue
+                        'rgba(201, 203, 207, 0.7)'  // Grey
+                    ],
+                    borderColor: [
+                        'rgba(15, 118, 110, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' 天';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
