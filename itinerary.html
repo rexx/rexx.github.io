@@ -53,7 +53,6 @@
                 <h1 class="text-xl md:text-2xl font-bold text-teal-800 dark:text-teal-300">東京親子夏日之旅</h1>
                 <div class="flex items-center">
                     <nav class="hidden md:flex space-x-8">
-                        <a href="#itinerary-overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">行程總覽</a>
                         <a href="#itinerary" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">每日行程</a>
                         <a href="#tips" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">規劃建議</a>
                         <a href="#data-overview" class="font-medium text-stone-600 dark:text-stone-300 hover:text-teal-600 dark:hover:text-teal-400 transition">總覽</a>
@@ -75,7 +74,6 @@
         </div>
         <div id="mobile-menu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#itinerary-overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">行程總覽</a>
                 <a href="#itinerary" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">每日行程</a>
                 <a href="#tips" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">規劃建議</a>
                 <a href="#data-overview" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:bg-stone-50 dark:hover:bg-gray-700">總覽</a>
@@ -85,14 +83,8 @@
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-        <section id="itinerary-overview" class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">行程總覽</h2>
-            <div id="overview-list" class="space-y-3 max-w-4xl mx-auto">
-            </div>
-        </section>
-
         <section id="itinerary" class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">每日行程詳情</h2>
+            <h2 class="text-3xl font-bold text-center mb-8">每日行程</h2>
             <div id="timeline" class="space-y-4 max-w-4xl mx-auto">
             </div>
         </section>
@@ -166,7 +158,7 @@
                 tips: "由於抵達時間已晚，當晚不安排活動，以恢復體力為優先。"
             },
             { 
-                day: 2, date: "7/25", weekday: "五", title: "商場購物 & 職人體驗 🛍️", icon: "🏙️", accommodation: "新橋", location: "東京 (新橋)",
+                day: 2, date: "7/25", weekday: "五", title: "商場購物 & 職人體驗 🛍️", icon: "👷", accommodation: "新橋", location: "東京 (新橋)",
                 details: [
                     "<b>上午：</b>在飯店悠閒享用早餐。",
                     "<b>10:30：</b>從新橋搭乘<b>百合海鷗號</b>前往豐洲。",
@@ -177,7 +169,7 @@
                 tips: "KidZania 熱門項目搶手，建議入場後第一時間先去預約一個最想玩的。"
             },
             { 
-                day: 3, date: "7/26", weekday: "六", title: "動物園與夏日花火 🐼", icon: "🏙️", accommodation: "新橋", location: "東京 (新橋)",
+                day: 3, date: "7/26", weekday: "六", title: "動物園與夏日花火 🐼", icon: "🎆", accommodation: "新橋", location: "東京 (新橋)",
                 details: [
                     "<b>上午：</b>在飯店享用早餐後，從新橋搭乘JR山手線前往上野。",
                     "<b>📝【本日備忘】</b>：務必在JR車站領取隔天前往熱海的<b>Saphir 踴子號</b>實體車票！",
@@ -188,7 +180,7 @@
                 tips: "強烈建議預訂付費觀覽席或景觀餐廳，以避開擁擠人潮。散場時人潮極多，請耐心移動。"
             },
             { 
-                day: 4, date: "7/27", weekday: "日", title: "前進伊豆，開啟海景自駕之旅 🚗", icon: "🚗", accommodation: "伊豆高原 (2晚)", location: "伊豆高原",
+                day: 4, date: "7/27", weekday: "日", title: "前進伊豆，海景自駕之旅 🚗", icon: "✨", accommodation: "伊豆高原 (2晚)", location: "伊豆高原",
                 details: [
                     "<b>09:30：</b>在新橋飯店退房。",
                     "<b>10:00 - 10:30：</b>從新橋搭JR至品川。",
@@ -220,7 +212,7 @@
                 tips: "行李宅配是本日行程順暢的關鍵，務必在離開伊豆時辦理。"
             },
             { 
-                day: 7, date: "7/30", weekday: "三", title: "箱根交通工具全制霸 🚠", icon: "🌉", accommodation: "橫濱 (3晚)", location: "橫濱",
+                day: 7, date: "7/30", weekday: "三", title: "箱根交通工具全制霸 🚠", icon: "🚢", accommodation: "橫濱 (3晚)", location: "橫濱",
                 details: [
                     "<b>上午：</b>將隨身行李寄放飯店，開始使用周遊券進行<b>箱根環狀線之旅</b>。",
                     "<b>行程：</b>體驗【登山纜車】→【空中纜車】→【海賊船】→【登山巴士】。",
@@ -230,7 +222,7 @@
                 tips: "利用周遊券可以無限次搭乘指定交通工具，請盡情享受！"
             },
             { 
-                day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子探索 🎡", icon: "🌉", accommodation: "橫濱", location: "橫濱",
+                day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子探索 🎡", icon: "🍜", accommodation: "橫濱", location: "橫濱",
                 details: [
                     "<b>上午：</b>前往 <b>UNIQLO PARK</b>，讓孩子在巨大的溜滑梯遊樂場放電。",
                     "<b>下午：</b>遊覽<b>港未來21</b>區域，可選擇參觀「日清杯麵博物館」或在「紅磚倉庫」散步。",
@@ -239,7 +231,7 @@
                 tips: "港未來區域開闊，適合推著嬰兒車悠閒散步。"
             },
             { 
-                day: 9, date: "8/01", weekday: "五", title: "古都與海岸線之旅 🌊", icon: "🌉", accommodation: "橫濱", location: "橫濱",
+                day: 9, date: "8/01", weekday: "五", title: "古都與海岸線之旅 🌊", icon: "⛩️", accommodation: "橫濱", location: "橫濱",
                 details: [
                     "<b>上午：</b>從橫濱搭乘JR橫須賀線至<b>鎌倉</b>，參觀鎌倉大佛與長谷寺。",
                     "<b>中午：</b>在鎌倉車站周邊用餐。",
@@ -249,7 +241,7 @@
                 tips: "在經典的「鎌倉高校前」站下車拍張照，是《灌籃高手》的朝聖行程。"
             },
             { 
-                day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川煙火 🎇", icon: "🗼", accommodation: "押上 (2晚)", location: "東京 (押上)",
+                day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川煙火 🎇", icon: "🏙️", accommodation: "押上 (2晚)", location: "東京 (押上)",
                 details: [
                     "<b>上午：</b>在橫濱退房，可先將行李寄放飯店，在車站周邊做最後巡禮。",
                     "<b>中午：</b>在橫濱用完午餐後，搭車前往東京<b>押上</b>的新飯店入住。",
@@ -259,7 +251,7 @@
                 tips: "住在押上已具地理優勢，可研究搭乘都營新宿線至「篠崎站」前往會場。"
             },
             { 
-                day: 11, date: "8/03", weekday: "日", title: "晴空下的東京 🗼", icon: "🗼", accommodation: "押上", location: "東京 (押上)",
+                day: 11, date: "8/03", weekday: "日", title: "晴空下的東京 🗼", icon: "🛍️", accommodation: "押上", location: "東京 (押上)",
                 details: [
                     "<b>上午：</b>以住宿點為中心，輕鬆遊覽<b>晴空塔 (Tokyo Skytree)</b>周邊。",
                     "<b>選項：</b>可選擇登上晴空塔看風景，或參觀塔下的「墨田水族館」。",
@@ -269,7 +261,7 @@
                 tips: "Solamachi商場是購買伴手禮和紀念品的一站式好去處。"
             },
             { 
-                day: 12, date: "8/04", weekday: "一", title: "滿載而歸 ✈️", icon: "✈️", accommodation: "-", location: "準備回程",
+                day: 12, date: "8/04", weekday: "一", title: "滿載而歸 ✈️", icon: "🏠", accommodation: "-", location: "準備回程",
                 details: [
                     "<b>上午：</b>悠閒享用早餐後，辦理飯店退房，並將行李寄放在櫃檯。",
                     "<b>中午：</b>最後的自由時間，可在晴空塔或淺草地區做最後巡禮。",
@@ -303,23 +295,6 @@
                 content: "兩場煙火大會都是數十萬人等級的活動，交通將會極度擁擠。請務必提早規劃來回交通路線。特別是8/2日為移動日，下午在新飯店附近稍作休息，儲備好體力，才能好好享受晚上的煙火盛會。"
             }
         ];
-        
-        const overviewList = document.getElementById('overview-list');
-        itineraryData.forEach(item => {
-            const overviewElement = document.createElement('div');
-            overviewElement.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow";
-            overviewElement.innerHTML = `
-                <div class="font-semibold">
-                    <span class="text-teal-600 dark:text-teal-400">Day ${item.day}</span>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"> | ${item.date} (週${item.weekday})</span>
-                </div>
-                <div class="flex items-center space-x-3 text-right">
-                    <span class="font-semibold">${item.location}</span>
-                    <span class="text-2xl">${item.icon}</span>
-                </div>
-            `;
-            overviewList.appendChild(overviewElement);
-        });
 
         const timelineContainer = document.getElementById('timeline');
         itineraryData.forEach((item, index) => {
