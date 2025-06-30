@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>東京親子夏日12日遊</title>
+    <!-- Chosen Palette: Calm Journey (based on neutrals like stone/beige with a soft teal accent) -->
+    <!-- Application Structure Plan: A single-page dashboard design with a top navigation for smooth scrolling. The structure includes: 1) An 'Overview' section with key stats and a pie chart for a quick grasp of the trip's distribution. 2) An interactive 'Daily Itinerary' timeline for easy day-by-day exploration. 3) A 'Key Tips' section using an accordion to organize planning advice. This structure was chosen to transform the linear report into a multi-faceted, non-linear exploratory experience, allowing users to either follow the timeline chronologically or jump directly to specific planning topics, enhancing usability. -->
+    <!-- Visualization & Content Choices: 1) Trip Distribution: Goal=Inform -> Pie Chart (Chart.js/Canvas) -> Shows time spent per city -> Justification: Provides an immediate high-level understanding of the trip's focus. 2) Daily Itinerary: Goal=Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Presents daily activities with icons -> Justification: More engaging and scannable than a static table. 3) Planning Advice: Goal=Inform -> Accordion (HTML/CSS/JS) -> Organizes detailed tips into collapsible sections -> Justification: Prevents information overload and allows users to focus on one topic at a time. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -148,7 +152,8 @@
                 coreTask: "晚班機抵達後，以最快速、轉乘最單純的方式從成田機場 (NRT) 安全抵達新橋的飯店，讓全家人能盡快休息。",
                 transport: "【首選推薦】搭乘<b>京成電鐵 Skyliner</b>至<b>日暮里站</b>，再轉乘<b>JR山手線</b>至<b>新橋站</b>。",
                 details: [
-                    "<b>19:55：</b>班機準時抵達成田機場 (NRT)。",
+                    "<b>15:30：</b>從桃園機場(TPE)第一航廈起飛 (TR870)。",
+                    "<b>19:55：</b>班機準時抵達成田機場(NRT)第一航廈。",
                     "<b>20:00 - 21:30：</b>辦理入境審查、領取行李、過海關。",
                     "<b>21:30 - 23:00：</b>搭乘機場交通，前往新橋飯店。",
                     "<b>23:00：</b>抵達飯店，辦理入住手續。"
@@ -230,7 +235,7 @@
                 tips: "您的大行李已在前一天送到橫濱飯店，讓這天的移動非常輕鬆。"
             },
             { 
-                day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子探索 🎡", icon: "🎡",
+                day: 8, date: "7/31", weekday: "四", title: "橫濱港都親子探索 🎡", icon: "🍜",
                 coreTask: "在橫濱的第一個整天，探索新潮有趣的親子景點，感受港都的獨特魅力。",
                 transport: "主要依賴 <b>JR根岸線</b> 與 <b>港未來線</b>。",
                 details: [
@@ -253,7 +258,7 @@
                 tips: "在經典的「鎌倉高校前」站下車拍張照，是《灌籃高手》的朝聖行程。"
             },
             { 
-                day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川煙火 🎇", icon: "🎇",
+                day: 10, date: "8/02", weekday: "六", title: "移動日 & 江戶川煙火 🎇", icon: "🏙️",
                 coreTask: "順利地從橫濱移動到東京押上的飯店，下午讓全家充分休息，為晚上第二場盛大的煙火大會儲備體力。",
                 transport: "<b>橫濱→押上：</b>搭乘JR東海道本線至品川，換乘京急本線(直通都營淺草線)至押上。",
                 details: [
@@ -277,17 +282,18 @@
                 tips: "Solamachi商場有寶可夢中心等名店，是購買伴手禮和紀念品的一站式好去處。"
             },
             { 
-                day: 12, date: "8/04", weekday: "一", title: "滿載而歸 ✈️", icon: "✈️",
+                day: 12, date: "8/04", weekday: "一", title: "滿載而歸 ✈️", icon: "🏠",
                 coreTask: "輕鬆退房，利用白天的時間進行最後的巡禮，傍晚準時、順暢地抵達機場。",
-                transport: "從<b>押上站</b>搭乘<b>京成Access特快</b>直達成田機場。",
+                transport: "【建議方案】從飯店搭乘<b>計程車</b>至<b>京成上野站</b>，換乘對號座的<b>Skyliner</b>直達機場。",
                 details: [
                     "<b>上午：</b>悠閒享用早餐後，辦理飯店退房，並將行李寄放在櫃檯。",
                     "<b>中午：</b>最後的自由時間，可在晴空塔或淺草地區做最後巡禮。",
-                    "<b>15:00 - 16:00：</b>返回飯店領取行李。",
-                    "<b>16:30 - 18:00：</b>從押上站搭車前往成田機場 (NRT)。",
-                    "<b>18:00 後：</b>抵達機場，準備搭乘深夜航班回家。"
+                    "<b>16:00 - 17:00：</b>返回飯店領取行李，準備前往機場。",
+                    "<b>18:30 前：</b>抵達機場，辦理登機報到手續。",
+                    "<b>21:10：</b>班機從成田機場(NRT)第一航廈起飛 (TR871)。",
+                    "<b>(隔日) 00:20：</b>抵達桃園機場(TPE)第一航廈。"
                 ],
-                tips: "從押上搭乘京成Access特快無需轉車，是前往成田機場最輕鬆的方式。"
+                tips: "雖然Access特快路線上直達，但考量到座位與行李空間，帶孩子回程時，搭計程車轉乘Skyliner會是更舒適的選擇。"
             },
         ];
 
