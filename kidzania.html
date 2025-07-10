@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidZania 東京【第二部】親子攻略</title>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: A single-page infographic layout designed as a step-by-step guide. The flow is chronological: 1. Hero section with the core mission. 2. "The Golden Rule" section explaining the critical 'Numbered Ticket' system with a visual timeline. 3. "The First 15 Minutes" section using a two-column layout to detail the 'split-up' strategy for parents. 4. "In-Park Strategy" section with a flowchart diagram to illustrate the activity loop. 5. "Parent's Survival Guide" with card-based tips. This structure was chosen to be a clear, actionable manual for a parent to follow on the day of the visit, prioritizing strategic clarity over a generic report layout. -->
+    <!-- Visualization & Content Choices: 1. Key Timings: Goal=Organize -> Visual Timeline (HTML/CSS) -> Justification: A timeline is more intuitive for understanding a sequence of timed events than plain text. 2. Split-up Strategy: Goal=Compare/Organize -> Two-column layout (HTML/CSS) -> Justification: Clearly delineates the tasks for "Parent A" and "Parent B". 3. Activity Loop: Goal=Organize -> Flowchart diagram (HTML/CSS with arrows) -> Justification: Visually represents the cyclical nature of the in-park strategy. 4. Parent Tips: Goal=Inform -> Card layout with icons (HTML/CSS) -> Justification: Breaks down advice into easy-to-scan, memorable chunks. No complex charts needed as the content is strategic, not data-heavy. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .dark body {
+            background-color: #0c1424;
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #EF476F, #FFD166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-number {
+            background-color: #FFD166;
+            color: #073B4C;
+        }
+        .dark .step-number {
+            background-color: #ffd166;
+            color: #073B4C;
+        }
+        .flow-arrow {
+            color: #118AB2;
+        }
+        .dark .flow-arrow {
+            color: #06D6A0;
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-200">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        
+        <div class="fixed top-4 right-4 z-50">
+            <button id="theme-toggle" type="button" class="text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-stone-200 dark:focus:ring-gray-700 rounded-lg text-xl p-2.5">
+                <span id="theme-toggle-dark-icon" class="hidden">🌙</span>
+                <span id="theme-toggle-light-icon" class="hidden">☀️</span>
+            </button>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="text-center mb-16">
+            <div class="text-5xl mb-4">👷</div>
+            <h1 class="text-4xl md:text-5xl font-black text-[#073B4C] dark:text-white mb-4">KidZania 東京【第二部】攻略</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">在5小時內，我們的目標不是玩遍全場，而是追求<b>高品質體驗</b>。為4歲孩子順利完成 <b>4-5個</b> 他真正喜歡的職業，就是最大的勝利！</p>
+        </section>
+
+        <!-- Step 1: The Golden Rule -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold">1</div>
+                <h2 class="ml-4 text-3xl font-bold text-[#073B4C] dark:text-white">黃金準則：提早領取「整理券」</h2>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <p class="mb-6 text-gray-700 dark:text-gray-300">KidZania 的潛規則就是「用整理券決定入場順序」。您不需要傻傻排隊5小時，只需在上午先領取號碼牌，就能決定您入場的順位，之後便可自由活動。</p>
+                <div class="relative pl-6 border-l-4 border-[#118AB2] dark:border-[#06D6A0] space-y-8">
+                    <div class="relative">
+                        <div class="absolute -left-8 w-4 h-4 bg-[#FFD166] rounded-full top-1.5"></div>
+                        <h4 class="font-bold text-lg text-gray-900 dark:text-gray-100">10:15 - 11:00｜領券時間</h4>
+                        <p class="text-gray-600 dark:text-gray-400">抵達 LaLaport 後，直奔3樓 KidZania 櫃檯領取「整理券」。這是今天最關鍵的任務，能確保您拿到A、B、C等最優先的入場組別。</p>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-8 w-4 h-4 bg-[#FFD166] rounded-full top-1.5"></div>
+                        <h4 class="font-bold text-lg text-gray-900 dark:text-gray-100">11:00 - 15:30｜自由時間</h4>
+                        <p class="text-gray-600 dark:text-gray-400">領完券後，就可以安心地去逛 LaLaport、在美食街吃午餐，完全沒有壓力。</p>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-8 w-4 h-4 bg-[#FFD166] rounded-full top-1.5"></div>
+                        <h4 class="font-bold text-lg text-gray-900 dark:text-gray-100">15:30 - 16:00｜集合入場</h4>
+                        <p class="text-gray-600 dark:text-gray-400">根據整理券上的時間，返回入口處排隊。工作人員會依 A、B、C 組順序引導入場。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: The First 15 Minutes -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold">2</div>
+                <h2 class="ml-4 text-3xl font-bold text-[#073B4C] dark:text-white">決勝15分鐘：「首衝」戰術</h2>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <p class="mb-6 text-gray-700 dark:text-gray-300">入場後的黃金15分鐘，決定了您今天能玩到多少熱門項目。建議家長分頭行動，效率最大化！</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-xl mb-2 text-[#EF476F]">家長A + 孩子 (體驗組)</h4>
+                        <p class="text-gray-600 dark:text-gray-400">入場後<b>不要</b>去排S級職業，直接去排第二順位的夢幻職業（如：<b>麵包店🍞、漢堡店🍔</b>），目標是成為第一批直接開始體驗的客人。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl mb-2 text-[#06D6A0]">家長B (預約組)</h4>
+                        <p class="text-gray-600 dark:text-gray-400">獨自一人，<b>立刻、快速</b>地跑向人氣最高的S級職業，幫孩子<b>預約一個稍晚的時段</b>。</p>
+                        <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <p class="font-semibold text-gray-800 dark:text-gray-200">S級熱門職業參考：</p>
+                            <ul class="text-sm list-disc list-inside mt-1 text-gray-600 dark:text-gray-400">
+                                <li>森永糖果工廠 (お菓子工場) 🍬</li>
+                                <li>Pizza-La披薩店 (ピザショップ) 🍕</li>
+                                <li>印章店 (はんこ屋) 🆎</li>
+                                <li>消防局 (消防署) 🚒</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: In-Park Strategy -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold">3</div>
+                <h2 class="ml-4 text-3xl font-bold text-[#073B4C] dark:text-white">時間最大化：「邊做邊等」循環</h2>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <div class="flex flex-col md:flex-row items-center justify-around text-center">
+                    <div class="p-4"><p class="text-xl font-bold text-gray-900 dark:text-gray-100">體驗職業</p><p class="text-sm text-gray-500 dark:text-gray-400">完成一項</p></div>
+                    <div class="flow-arrow text-4xl font-light mx-4">→</div>
+                    <div class="p-4"><p class="text-xl font-bold text-gray-900 dark:text-gray-100">立刻預約</p><p class="text-sm text-gray-500 dark:text-gray-400">預約下個熱門職業</p></div>
+                    <div class="flow-arrow text-4xl font-light mx-4">→</div>
+                    <div class="p-4"><p class="text-xl font-bold text-gray-900 dark:text-gray-100">填補空檔</p><p class="text-sm text-gray-500 dark:text-gray-400">玩等候短的或兼職</p></div>
+                    <div class="flow-arrow text-4xl font-light mx-4">→</div>
+                    <div class="p-4"><p class="text-xl font-bold text-gray-900 dark:text-gray-100">重複循環</p><p class="text-sm text-gray-500 dark:text-gray-400">直到預約時間到</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Parent's Survival Guide -->
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold">4</div>
+                <h2 class="ml-4 text-3xl font-bold text-[#073B4C] dark:text-white">家長生存指南</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">⭐ 管理期望</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">玩得開心最重要，不要強迫孩子去排他不喜歡的隊伍。讓他自己做主，體驗會更好。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">📏 注意限制</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">少部分職業（如開車）有身高限制，可以先在地圖上確認，避免排隊後才發現無法參加。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">🍔 食物的魔力</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">讓孩子親手做食物（披薩、漢堡、麵包）並當場吃掉，通常是他們最有成就感的體驗。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">🛋️ 善用家長休息室</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">當孩子在體驗時，您可以到家長休息室坐下休息，裡面有充電插座和飲料販賣機。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">🌐 語言不是問題</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">完全不用擔心！館內的工作人員都非常有經驗，他們會用大量的肢體語言和示範來引導孩子。</p>
+                </div>
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">💰 關於 KidZos</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">孩子工作賺到的 KidZos 可以在百貨公司消費，也可以存入銀行。離開前記得去銀行辦張提款卡留念！</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+            }
+        }
+        
+        const savedTheme = localStorage.getItem('color-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else if (prefersDark) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('color-theme', newTheme);
+            applyTheme(newTheme);
+        });
+    });
+</script>
+
+</body>
+</html>
