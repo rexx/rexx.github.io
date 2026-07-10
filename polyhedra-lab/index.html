@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="同步觀察正十二面體與正二十面體的截角過程，探索面、邊、頂點與對偶關係。"
+    >
+    <meta name="theme-color" content="#102a43">
+    <title>截角的秘密｜互動多面體實驗室</title>
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("polyhedra-theme");
+        const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = savedTheme || systemTheme;
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+          "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.21/+esm"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#experiment" data-i18n="skip">跳到互動實驗</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="多面體實驗室首頁">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M24 3 42 14v20L24 45 6 34V14Z"></path>
+            <path d="m24 3 7 17-7 25-7-25Z"></path>
+            <path d="m6 14 11 6 14 0 11-6M6 34l18-9 18 9"></path>
+          </svg>
+        </span>
+        <span>
+          <strong>POLYHEDRA LAB</strong>
+          <small data-i18n="brandSubtitle">互動多面體實驗室</small>
+        </span>
+      </a>
+      <nav aria-label="頁面導覽">
+        <a href="#experiment" data-i18n="navExperiment">互動實驗</a>
+        <a href="#topology" data-i18n="navTopology">拓樸觀察</a>
+        <a href="#duality" data-i18n="navDuality">對偶關係</a>
+      </nav>
+      <div class="header-actions">
+        <button class="utility-button language-toggle" id="language-toggle" type="button" aria-label="Switch to English">
+          <span class="language-current">中</span><i aria-hidden="true"></i><span class="language-next">EN</span>
+        </button>
+        <button class="utility-button theme-toggle" id="theme-toggle" type="button" aria-label="切換深色模式" aria-pressed="false">
+          <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"></path>
+          </svg>
+        </button>
+        <button class="icon-button" id="about-button" type="button" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 11v6M12 7.25v.5"></path>
+          </svg>
+          <span data-i18n="help">使用說明</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <div class="eyebrow"><span></span><b data-i18n="eyebrow">同步幾何觀察 No. 01</b></div>
+          <h1 id="page-title" data-i18n-html="heroTitle">當頂點被切掉，<br><em>形狀如何重生？</em></h1>
+          <p data-i18n="heroDescription">
+            同時拖動兩個柏拉圖立體的截角深度，觀察原本的面如何擴張，
+            以及每個頂點如何變成一個全新的面。
+          </p>
+        </div>
+        <aside class="intro-note" aria-label="本次觀察重點">
+          <span class="note-index">01</span>
+          <div>
+            <small>OBSERVATION</small>
+            <strong data-i18n="observation">面數增加，但歐拉示性數始終不變</strong>
+            <span>V − E + F = 2</span>
+          </div>
+        </aside>
+      </section>
+
+      <section
+        class="experiment-shell"
+        id="experiment"
+        aria-labelledby="experiment-title"
+        data-dodeca-base="正十二面體"
+        data-dodeca-progress="截角中的十二面體"
+        data-dodeca-result="截角十二面體"
+        data-icosa-base="正二十面體"
+        data-icosa-progress="截角中的二十面體"
+        data-icosa-result="截角二十面體"
+        data-dual-base="面與頂點一一對應"
+        data-dual-cut="截角後不再互為對偶"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="section-number">01</span>
+            <div>
+              <p>INTERACTIVE EXHIBIT</p>
+              <h2 id="experiment-title" data-i18n="experimentTitle">同步截角觀察台</h2>
+            </div>
+          </div>
+          <div class="live-badge"><span></span><b data-i18n="live">即時運算</b></div>
+        </div>
+
+        <div class="model-stage">
+          <article class="model-panel" data-model="dodecahedron">
+            <header>
+              <div>
+                <span class="model-kicker">FROM 12 PENTAGONS</span>
+                <h3 id="dodeca-name" data-name-role="dodeca">正十二面體</h3>
+              </div>
+              <span class="model-symbol" aria-hidden="true">⬠</span>
+            </header>
+            <div class="canvas-frame">
+              <canvas id="dodeca-canvas" aria-label="可拖曳旋轉的正十二面體 3D 模型"></canvas>
+              <div class="canvas-grid" aria-hidden="true"></div>
+              <div class="drag-hint">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 11V7a1.5 1.5 0 0 1 3 0v3-5a1.5 1.5 0 0 1 3 0v5-3a1.5 1.5 0 0 1 3 0v4-1a1.5 1.5 0 0 1 3 0v4.5c0 4-2.5 6.5-6.5 6.5h-1c-2.2 0-3.6-1-5-2.7L4.7 15a1.6 1.6 0 0 1 2.2-2.3L8 13.5Z"></path>
+                </svg>
+                <b data-i18n="drag">拖曳旋轉</b>
+              </div>
+              <span class="cut-status" id="dodeca-status" data-i18n="originalShape">原始形狀</span>
+            </div>
+            <footer>
+              <span><i class="legend-dot original"></i><b data-i18n="originalFaces">原本的面</b></span>
+              <span><i class="legend-dot new"></i><b data-i18n="newFaces">新產生的面</b></span>
+              <span><i class="legend-dot removed"></i><b data-i18n="removedParts">被切掉的部分</b></span>
+            </footer>
+          </article>
+
+          <div class="dual-bridge" id="dual-bridge" aria-live="polite">
+            <span class="bridge-line"></span>
+            <button id="dual-toggle" type="button" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 7-4 5 4 5M17 7l4 5-4 5M4 12h16"></path>
+              </svg>
+              <span data-i18n="showDual">顯示對偶</span>
+            </button>
+            <strong id="dual-status" data-i18n="dualBase">面與頂點一一對應</strong>
+            <span class="bridge-line"></span>
+          </div>
+
+          <article class="model-panel" data-model="icosahedron">
+            <header>
+              <div>
+                <span class="model-kicker">FROM 20 TRIANGLES</span>
+                <h3 id="icosa-name" data-name-role="icosa">正二十面體</h3>
+              </div>
+              <span class="model-symbol triangle" aria-hidden="true">△</span>
+            </header>
+            <div class="canvas-frame">
+              <canvas id="icosa-canvas" aria-label="可拖曳旋轉的正二十面體 3D 模型"></canvas>
+              <div class="canvas-grid" aria-hidden="true"></div>
+              <div class="drag-hint">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 11V7a1.5 1.5 0 0 1 3 0v3-5a1.5 1.5 0 0 1 3 0v5-3a1.5 1.5 0 0 1 3 0v4-1a1.5 1.5 0 0 1 3 0v4.5c0 4-2.5 6.5-6.5 6.5h-1c-2.2 0-3.6-1-5-2.7L4.7 15a1.6 1.6 0 0 1 2.2-2.3L8 13.5Z"></path>
+                </svg>
+                <b data-i18n="drag">拖曳旋轉</b>
+              </div>
+              <span class="cut-status" id="icosa-status" data-i18n="originalShape">原始形狀</span>
+            </div>
+            <footer>
+              <span><i class="legend-dot original"></i><b data-i18n="originalFaces">原本的面</b></span>
+              <span><i class="legend-dot new"></i><b data-i18n="newFaces">新產生的面</b></span>
+              <span><i class="legend-dot removed"></i><b data-i18n="removedParts">被切掉的部分</b></span>
+            </footer>
+          </article>
+        </div>
+
+        <div class="control-deck">
+          <div class="depth-control">
+            <div class="control-label">
+              <div>
+                <span>TRUNCATION DEPTH</span>
+                <label for="cut-depth" data-i18n="cutDepth">截角深度</label>
+              </div>
+              <output id="depth-output" for="cut-depth">0%</output>
+            </div>
+            <div class="range-row">
+              <button class="play-button" id="play-button" type="button" aria-label="播放截角動畫">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 7 8 5-8 5Z"></path>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 7v10M15 7v10"></path>
+                </svg>
+              </button>
+              <div class="range-wrap">
+                <input
+                  id="cut-depth"
+                  type="range"
+                  min="0"
+                  max="33"
+                  step="0.1"
+                  value="33"
+                  aria-valuetext="33%，均勻截角完成"
+                >
+                <div class="range-ticks" aria-hidden="true">
+                  <span>0%</span><span data-i18n="cutBegins">開始切割</span><span data-i18n="uniformCut">均勻截角 33%</span>
+                </div>
+              </div>
+              <button class="reset-button" id="reset-button" type="button" data-i18n="reset">重設</button>
+            </div>
+          </div>
+
+          <div class="mode-controls">
+            <fieldset>
+              <legend><span>VIEW MODE</span><b data-i18n="viewMode">顯示模式</b></legend>
+              <div class="segmented-control">
+                <label>
+                  <input type="radio" name="view-mode" value="solid" checked>
+                  <span data-i18n="modeSolid">一般</span>
+                </label>
+                <label>
+                  <input type="radio" name="view-mode" value="wireframe">
+                  <span data-i18n="modeWireframe">線框</span>
+                </label>
+                <label>
+                  <input type="radio" name="view-mode" value="transparent">
+                  <span data-i18n="modeTransparent">半透明</span>
+                </label>
+                <label>
+                  <input type="radio" name="view-mode" value="exploded">
+                  <span data-i18n="modeExploded">爆炸圖</span>
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="switches">
+              <legend><span>OVERLAYS</span><b data-i18n="overlays">輔助觀察</b></legend>
+              <label class="switch">
+                <input id="edges-toggle" type="checkbox" checked>
+                <span aria-hidden="true"></span><b data-i18n="showEdges">顯示邊</b>
+              </label>
+              <label class="switch">
+                <input id="vertices-toggle" type="checkbox">
+                <span aria-hidden="true"></span><b data-i18n="showVertices">顯示頂點</b>
+              </label>
+              <label class="switch">
+                <input id="rotate-toggle" type="checkbox" checked>
+                <span aria-hidden="true"></span><b data-i18n="slowRotation">慢速旋轉</b>
+              </label>
+            </fieldset>
+            <div class="advanced-slot" id="advanced-controls"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topology-section" id="topology" aria-labelledby="topology-title">
+        <div class="section-heading dark">
+          <div>
+            <span class="section-number">02</span>
+            <div>
+              <p>TOPOLOGY COUNTER</p>
+              <h2 id="topology-title" data-i18n="topologyTitle">數字如何跟著形狀改變</h2>
+            </div>
+          </div>
+          <p class="section-description" data-i18n-html="topologyDescription">
+            一旦切面出現，每條原始邊會貢獻兩個新頂點；無論形狀如何改變，
+            <strong>V − E + F</strong> 都維持為 2。
+          </p>
+        </div>
+
+        <div class="topology-grid">
+          <article class="topology-card" data-stats="dodecahedron">
+            <header>
+              <div>
+                <span>LEFT MODEL</span>
+                <h3 id="dodeca-stats-title" data-name-role="dodeca">正十二面體</h3>
+              </div>
+              <div class="euler-badge">V − E + F = <strong>2</strong></div>
+            </header>
+            <div class="face-breakdown">
+              <div>
+                <i class="face-icon pentagon"></i>
+                <span id="dodeca-face-a-label" data-face-label="dodeca-a">五邊形</span>
+                <strong id="dodeca-face-a">12</strong>
+              </div>
+              <div id="dodeca-face-b-row" hidden>
+                <i class="face-icon triangle"></i>
+                <span id="dodeca-face-b-label" data-face-label="dodeca-b">三角形</span>
+                <strong id="dodeca-face-b">0</strong>
+              </div>
+            </div>
+            <dl class="topology-totals">
+              <div><dt><b data-i18n="faces">面數</b> <small>FACES</small></dt><dd id="dodeca-faces">12</dd></div>
+              <div><dt><b data-i18n="edges">邊數</b> <small>EDGES</small></dt><dd id="dodeca-edges">30</dd></div>
+              <div><dt><b data-i18n="vertices">頂點</b> <small>VERTICES</small></dt><dd id="dodeca-vertices">20</dd></div>
+            </dl>
+          </article>
+
+          <div class="equation-column" aria-hidden="true">
+            <span></span>
+            <div>
+              <small data-i18n="sameTotals">兩者始終相同</small>
+              <strong>32 · 90 · 60</strong>
+              <em>at 33%</em>
+            </div>
+            <span></span>
+          </div>
+
+          <article class="topology-card" data-stats="icosahedron">
+            <header>
+              <div>
+                <span>RIGHT MODEL</span>
+                <h3 id="icosa-stats-title" data-name-role="icosa">正二十面體</h3>
+              </div>
+              <div class="euler-badge">V − E + F = <strong>2</strong></div>
+            </header>
+            <div class="face-breakdown">
+              <div>
+                <i class="face-icon triangle"></i>
+                <span id="icosa-face-a-label" data-face-label="icosa-a">三角形</span>
+                <strong id="icosa-face-a">20</strong>
+              </div>
+              <div id="icosa-face-b-row" hidden>
+                <i class="face-icon hexagon"></i>
+                <span id="icosa-face-b-label" data-face-label="icosa-b">五邊形</span>
+                <strong id="icosa-face-b">0</strong>
+              </div>
+            </div>
+            <dl class="topology-totals">
+              <div><dt><b data-i18n="faces">面數</b> <small>FACES</small></dt><dd id="icosa-faces">20</dd></div>
+              <div><dt><b data-i18n="edges">邊數</b> <small>EDGES</small></dt><dd id="icosa-edges">30</dd></div>
+              <div><dt><b data-i18n="vertices">頂點</b> <small>VERTICES</small></dt><dd id="icosa-vertices">12</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="duality-section" id="duality" aria-labelledby="duality-title">
+        <div class="duality-visual" aria-hidden="true">
+          <div class="dual-shape dodeca-wire">
+            <svg viewBox="0 0 260 260">
+              <path d="M130 18 224 76l-35 112-118 0L36 76Z"></path>
+              <path d="m130 18 25 78-25 80-25-80ZM36 76l69 20h50l69-20M71 188l59-12 59 12"></path>
+              <circle cx="130" cy="18" r="5"></circle><circle cx="224" cy="76" r="5"></circle>
+              <circle cx="189" cy="188" r="5"></circle><circle cx="71" cy="188" r="5"></circle>
+              <circle cx="36" cy="76" r="5"></circle>
+            </svg>
+          </div>
+          <div class="duality-arrow">
+            <span>FACE</span><i></i><strong>↔</strong><i></i><span>VERTEX</span>
+          </div>
+          <div class="dual-shape icosa-wire">
+            <svg viewBox="0 0 260 260">
+              <path d="m130 18 101 73-39 119H68L29 91Z"></path>
+              <path d="m130 18-35 73 35 119 35-119ZM29 91h66l70 0h66M68 210l62-119 62 119M29 91l101 119L231 91"></path>
+              <circle cx="130" cy="18" r="5"></circle><circle cx="231" cy="91" r="5"></circle>
+              <circle cx="192" cy="210" r="5"></circle><circle cx="68" cy="210" r="5"></circle>
+              <circle cx="29" cy="91" r="5"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="duality-copy">
+          <span class="section-number">03</span>
+          <p>DUALITY, WITH A CAVEAT</p>
+          <h2 id="duality-title" data-i18n-html="dualityTitle">面變成頂點，<br>頂點變成面</h2>
+          <p data-i18n="dualityDescription">
+            正十二面體與正二十面體互為對偶：一個形狀的每個面，都對應另一個形狀的一個頂點；
+            邊則一一對應。因此兩者的面數與頂點數正好互換。
+          </p>
+          <div class="fact-row">
+            <div><strong>12</strong><span data-i18n="faceUnit">面</span><i>↔</i><strong>12</strong><span data-i18n="vertexUnit">頂點</span></div>
+            <div><strong>20</strong><span data-i18n="vertexUnit">頂點</span><i>↔</i><strong>20</strong><span data-i18n="faceUnit">面</span></div>
+          </div>
+          <aside>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 20h19ZM12 9v5M12 17v.2"></path></svg>
+            <p data-i18n-html="dualityCaveat">
+              <strong>重要觀察：</strong>截角十二面體與截角二十面體擁有相同的 F、E、V，
+              但它們<strong>並不互為對偶</strong>。兩者真正的對偶分別是三角化二十面體與五角化十二面體。
+            </p>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>POLYHEDRA LAB</strong>
+        <span data-i18n="footerTagline">用互動看見幾何，而不只是記住答案。</span>
+      </div>
+      <a href="#top"><b data-i18n="backToTop">回到頂端</b> <span aria-hidden="true">↑</span></a>
+    </footer>
+
+    <dialog id="about-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" type="button" aria-label="關閉使用說明">×</button>
+      <span class="dialog-kicker">HOW TO EXPLORE</span>
+      <h2 id="dialog-title" data-i18n="dialogTitle">三步開始觀察</h2>
+      <ol>
+        <li><span>01</span><p data-i18n-html="dialogStep1"><strong>拖動截角深度</strong>兩個模型會同步變化，紅色半透明部分代表被移除的角。</p></li>
+        <li><span>02</span><p data-i18n-html="dialogStep2"><strong>切換顯示模式</strong>用線框看拓樸、半透明看背面，或用爆炸圖分辨每一個面。</p></li>
+        <li><span>03</span><p data-i18n-html="dialogStep3"><strong>拖曳任一模型</strong>從各個角度旋轉觀察；滾輪或雙指可以縮放。</p></li>
+      </ol>
+    </dialog>
+
+    <noscript>這個互動展示需要啟用 JavaScript 才能運作。 JavaScript is required for this interactive exhibit.</noscript>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
