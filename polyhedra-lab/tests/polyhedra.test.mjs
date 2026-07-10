@@ -30,7 +30,7 @@ Object.entries(expectedTruncated).forEach(([type, expected]) => {
   test(`${type} produces the expected uniform truncation`, () => {
     const polyhedron = createPolyhedron(type);
     const truncated = truncatePolyhedron(polyhedron, 1 / 3);
-    const topology = topologyFor(polyhedron, true);
+    const topology = topologyFor(polyhedron, 1 / 3);
 
     assert.equal(truncated.originalFaces.length, expected.originalCount);
     assert.equal(truncated.capFaces.length, expected.capCount);
@@ -51,9 +51,30 @@ test("zero truncation preserves the source faces", () => {
   assert.equal(result.originalFaces.length, polyhedron.faces.length);
 });
 
-test("truncation depth is clamped to the uniform limit", () => {
+Object.entries(expectedBase).forEach(([type, base]) => {
+  test(`${type} rectifies at the edge midpoints`, () => {
+    const polyhedron = createPolyhedron(type);
+    const rectified = truncatePolyhedron(polyhedron, 1 / 2);
+    const topology = topologyFor(polyhedron, 1 / 2);
+
+    assert.equal(rectified.isRectified, true);
+    assert.equal(rectified.vertices.length, 30);
+    assert.equal(rectified.originalFaces.length, base.faceCount);
+    assert.ok(rectified.originalFaces.every((face) => face.length === base.faceSize));
+    assert.equal(rectified.capFaces.length, base.vertices);
+    assert.deepEqual(topology, { edges: 60, faces: 32, vertices: 30 });
+    assert.equal(topology.vertices - topology.edges + topology.faces, 2);
+  });
+});
+
+test("deep truncation preserves the open truncation topology before rectification", () => {
   const polyhedron = createPolyhedron("icosahedron");
-  const atLimit = truncatePolyhedron(polyhedron, 1 / 3);
+  assert.deepEqual(topologyFor(polyhedron, 0.4), { edges: 90, faces: 32, vertices: 60 });
+});
+
+test("truncation depth is clamped to the rectification limit", () => {
+  const polyhedron = createPolyhedron("icosahedron");
+  const atLimit = truncatePolyhedron(polyhedron, 1 / 2);
   const beyondLimit = truncatePolyhedron(polyhedron, 0.9);
 
   assert.deepEqual(beyondLimit.originalFaces, atLimit.originalFaces);

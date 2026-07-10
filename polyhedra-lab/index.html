@@ -191,7 +191,7 @@
                 <span>TRUNCATION DEPTH</span>
                 <label for="cut-depth" data-i18n="cutDepth">截角深度</label>
               </div>
-              <output id="depth-output" for="cut-depth">0%</output>
+              <output id="depth-output" for="cut-depth">33%</output>
             </div>
             <div class="range-row">
               <button class="play-button" id="play-button" type="button" aria-label="播放截角動畫">
@@ -207,13 +207,13 @@
                   id="cut-depth"
                   type="range"
                   min="0"
-                  max="33"
+                  max="50"
                   step="0.1"
                   value="33"
                   aria-valuetext="33%，均勻截角完成"
                 >
                 <div class="range-ticks" aria-hidden="true">
-                  <span>0%</span><span data-i18n="cutBegins">開始切割</span><span data-i18n="uniformCut">均勻截角 33%</span>
+                  <span>0%</span><span data-i18n="uniformCut">均勻截角 33%</span><span data-i18n="rectifiedCut">截半 50%</span>
                 </div>
               </div>
               <button class="reset-button" id="reset-button" type="button" data-i18n="reset">重設</button>
@@ -272,8 +272,8 @@
             </div>
           </div>
           <p class="section-description" data-i18n-html="topologyDescription">
-            一旦切面出現，每條原始邊會貢獻兩個新頂點；無論形狀如何改變，
-            <strong>V − E + F</strong> 都維持為 2。
+            切面出現後，每條原始邊先貢獻兩個新頂點；到 50% 時，兩點在邊的中點合併。
+            整個過程中 <strong>V − E + F</strong> 都維持為 2。
           </p>
         </div>
 
@@ -308,9 +308,9 @@
           <div class="equation-column" aria-hidden="true">
             <span></span>
             <div>
-              <small data-i18n="sameTotals">兩者始終相同</small>
-              <strong>32 · 90 · 60</strong>
-              <em>at 33%</em>
+              <small id="shared-label" data-i18n="sameTotals">兩者始終相同</small>
+              <strong id="shared-totals">32 · 90 · 60</strong>
+              <em id="shared-depth">at 33%</em>
             </div>
             <span></span>
           </div>
@@ -383,8 +383,8 @@
           <aside>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 20h19ZM12 9v5M12 17v.2"></path></svg>
             <p data-i18n-html="dualityCaveat">
-              <strong>重要觀察：</strong>截角十二面體與截角二十面體擁有相同的 F、E、V，
-              但它們<strong>並不互為對偶</strong>。兩者真正的對偶分別是三角化二十面體與五角化十二面體。
+              <strong>重要觀察：</strong>33% 時的截角十二面體與截角二十面體擁有相同的 F、E、V，
+              但它們<strong>並不互為對偶</strong>；繼續到 50%，兩條路徑會匯合成同一個截半二十面體。
             </p>
           </aside>
         </div>
@@ -404,7 +404,7 @@
       <span class="dialog-kicker">HOW TO EXPLORE</span>
       <h2 id="dialog-title" data-i18n="dialogTitle">三步開始觀察</h2>
       <ol>
-        <li><span>01</span><p data-i18n-html="dialogStep1"><strong>拖動截角深度</strong>兩個模型會同步變化，紅色半透明部分代表被移除的角。</p></li>
+        <li><span>01</span><p data-i18n-html="dialogStep1"><strong>拖動截角深度</strong>兩個模型會同步從 0% 經過均勻截角 33%，最後在截半 50% 匯合。</p></li>
         <li><span>02</span><p data-i18n-html="dialogStep2"><strong>切換顯示模式</strong>用線框看拓樸、半透明看背面，或用爆炸圖分辨每一個面。</p></li>
         <li><span>03</span><p data-i18n-html="dialogStep3"><strong>拖曳任一模型</strong>從各個角度旋轉觀察；滾輪或雙指可以縮放。</p></li>
       </ol>

@@ -41,6 +41,28 @@ function lerp(a, b, amount) {
   return add(scale(a, 1 - amount), scale(b, amount));
 }
 
+function pointsMatch(a, b, epsilon = 1e-6) {
+  return length(subtract(a, b)) < epsilon;
+}
+
+function collapseFacePoints(points) {
+  const collapsed = points.filter((point, index) => (
+    index === 0 || !pointsMatch(point, points[index - 1])
+  ));
+
+  if (collapsed.length > 1 && pointsMatch(collapsed[0], collapsed.at(-1))) {
+    collapsed.pop();
+  }
+
+  return collapsed;
+}
+
+function uniquePoints(points) {
+  return points.filter((point, index) => (
+    points.findIndex((candidate) => pointsMatch(point, candidate)) === index
+  ));
+}
+
 function faceNormal(points) {
   let normal = [0, 0, 0];
 
@@ -212,7 +234,7 @@ function sortedNeighbors(polyhedron, vertexIndex) {
 }
 
 export function truncatePolyhedron(polyhedron, amount) {
-  const safeAmount = Math.max(0, Math.min(1 / 3, amount));
+  const safeAmount = Math.max(0, Math.min(1 / 2, amount));
 
   if (safeAmount < EPSILON) {
     return {
@@ -221,6 +243,7 @@ export function truncatePolyhedron(polyhedron, amount) {
       cutFragments: [],
       vertices: polyhedron.vertices,
       isTruncated: false,
+      isRectified: false,
     };
   }
 
@@ -238,7 +261,7 @@ export function truncatePolyhedron(polyhedron, amount) {
       points.push(directedPoints.get(`${vertex}:${previous}`));
       points.push(directedPoints.get(`${vertex}:${next}`));
     });
-    return points;
+    return collapseFacePoints(points);
   });
 
   const capFaces = [];
@@ -268,17 +291,26 @@ export function truncatePolyhedron(polyhedron, amount) {
     originalFaces,
     capFaces,
     cutFragments,
-    vertices: [...directedPoints.values()],
+    vertices: uniquePoints([...directedPoints.values()]),
     isTruncated: true,
+    isRectified: safeAmount >= 1 / 2 - EPSILON,
   };
 }
 
-export function topologyFor(polyhedron, truncated) {
-  if (!truncated) {
+export function topologyFor(polyhedron, amount = 0) {
+  if (amount < EPSILON) {
     return {
       faces: polyhedron.faces.length,
       edges: polyhedron.edges.length,
       vertices: polyhedron.vertices.length,
+    };
+  }
+
+  if (amount >= 1 / 2 - EPSILON) {
+    return {
+      faces: polyhedron.faces.length + polyhedron.vertices.length,
+      edges: polyhedron.edges.length * 2,
+      vertices: polyhedron.edges.length,
     };
   }
 

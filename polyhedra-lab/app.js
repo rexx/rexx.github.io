@@ -3,9 +3,20 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import GUI from "lil-gui";
 import { createPolyhedron, topologyFor, truncatePolyhedron, vectorMath } from "./polyhedra.mjs";
 
-const MAX_DEPTH = 33;
+const MAX_DEPTH = 50;
+const UNIFORM_DEPTH = 33;
 const UNIFORM_TRUNCATION = 1 / 3;
+const RECTIFICATION = 1 / 2;
 const CUT_THRESHOLD = 0.0005;
+
+function depthToAmount(depth) {
+  if (depth <= UNIFORM_DEPTH) {
+    return (depth / UNIFORM_DEPTH) * UNIFORM_TRUNCATION;
+  }
+
+  const deepProgress = (depth - UNIFORM_DEPTH) / (MAX_DEPTH - UNIFORM_DEPTH);
+  return UNIFORM_TRUNCATION + deepProgress * (RECTIFICATION - UNIFORM_TRUNCATION);
+}
 
 const translations = {
   zh: {
@@ -25,7 +36,9 @@ const translations = {
     drag: "拖曳旋轉",
     originalShape: "原始形狀",
     formingShape: "切面形成中",
-    finishedShape: "均勻截角完成",
+    uniformShape: "均勻截角",
+    deepShape: "越過均勻截角",
+    rectifiedShape: "截半完成",
     originalFaces: "原本的面",
     newFaces: "新產生的面",
     removedParts: "被切掉的部分",
@@ -33,9 +46,11 @@ const translations = {
     hideDual: "隱藏對偶",
     dualBase: "面與頂點一一對應",
     dualCut: "截角後不再互為對偶",
+    dualRectified: "兩條對偶路徑匯合為同一形狀",
     cutDepth: "截角深度",
     cutBegins: "開始切割",
     uniformCut: "均勻截角 33%",
+    rectifiedCut: "截半 50%",
     reset: "重設",
     viewMode: "顯示模式",
     overlays: "輔助觀察",
@@ -47,7 +62,7 @@ const translations = {
     showVertices: "顯示頂點",
     slowRotation: "慢速旋轉",
     topologyTitle: "數字如何跟著形狀改變",
-    topologyDescription: "一旦切面出現，每條原始邊會貢獻兩個新頂點；無論形狀如何改變，<strong>V − E + F</strong> 都維持為 2。",
+    topologyDescription: "切面出現後，每條原始邊先貢獻兩個新頂點；到 50% 時，兩點在邊的中點合併。整個過程中 <strong>V − E + F</strong> 都維持為 2。",
     faces: "面數",
     edges: "邊數",
     vertices: "頂點",
@@ -56,19 +71,23 @@ const translations = {
     dualityDescription: "正十二面體與正二十面體互為對偶：一個形狀的每個面，都對應另一個形狀的一個頂點；邊則一一對應。因此兩者的面數與頂點數正好互換。",
     faceUnit: "面",
     vertexUnit: "頂點",
-    dualityCaveat: "<strong>重要觀察：</strong>截角十二面體與截角二十面體擁有相同的 F、E、V，但它們<strong>並不互為對偶</strong>。兩者真正的對偶分別是三角化二十面體與五角化十二面體。",
+    dualityCaveat: "<strong>重要觀察：</strong>33% 時的截角十二面體與截角二十面體擁有相同的 F、E、V，但它們<strong>並不互為對偶</strong>；繼續到 50%，兩條路徑會匯合成同一個截半二十面體。",
     footerTagline: "用互動看見幾何，而不只是記住答案。",
     backToTop: "回到頂端",
     dialogTitle: "三步開始觀察",
-    dialogStep1: "<strong>拖動截角深度</strong>兩個模型會同步變化，紅色半透明部分代表被移除的角。",
+    dialogStep1: "<strong>拖動截角深度</strong>兩個模型會同步從 0% 經過均勻截角 33%，最後在截半 50% 匯合。",
     dialogStep2: "<strong>切換顯示模式</strong>用線框看拓樸、半透明看背面，或用爆炸圖分辨每一個面。",
     dialogStep3: "<strong>拖曳任一模型</strong>從各個角度旋轉觀察；滾輪或雙指可以縮放。",
     dodecaBase: "正十二面體",
     dodecaProgress: "截角中的十二面體",
-    dodecaResult: "截角十二面體",
+    dodecaUniform: "截角十二面體",
+    dodecaDeep: "深截角十二面體",
+    dodecaRectified: "截半二十面體",
     icosaBase: "正二十面體",
     icosaProgress: "截角中的二十面體",
-    icosaResult: "截角二十面體",
+    icosaUniform: "截角二十面體",
+    icosaDeep: "深截角二十面體",
+    icosaRectified: "截半二十面體",
     pentagon: "五邊形",
     triangle: "三角形",
     decagon: "十邊形",
@@ -79,6 +98,7 @@ const translations = {
     darkMode: "切換深色模式",
     switchLanguage: "Switch to English",
     depthAria: (depth, status) => `${depth}%，${status}`,
+    sharedAt: (depth) => `at ${depth}%`,
     advancedTitle: "進階觀察",
     showRemoved: "顯示移除部分",
     rotationSpeed: "旋轉速度",
@@ -101,7 +121,9 @@ const translations = {
     drag: "DRAG TO ROTATE",
     originalShape: "Original solid",
     formingShape: "Cut faces forming",
-    finishedShape: "Uniform truncation",
+    uniformShape: "Uniform truncation",
+    deepShape: "Beyond uniform truncation",
+    rectifiedShape: "Rectification complete",
     originalFaces: "Original faces",
     newFaces: "New faces",
     removedParts: "Removed corners",
@@ -109,9 +131,11 @@ const translations = {
     hideDual: "Hide dual",
     dualBase: "Faces and vertices correspond",
     dualCut: "No longer dual after truncation",
+    dualRectified: "Both dual paths meet in the same solid",
     cutDepth: "Truncation depth",
     cutBegins: "Cuts begin",
     uniformCut: "Uniform cut 33%",
+    rectifiedCut: "Rectified 50%",
     reset: "Reset",
     viewMode: "View mode",
     overlays: "Overlays",
@@ -123,7 +147,7 @@ const translations = {
     showVertices: "Show vertices",
     slowRotation: "Slow rotation",
     topologyTitle: "How the numbers follow the form",
-    topologyDescription: "Once cuts appear, every original edge contributes two new vertices. No matter how the solid changes, <strong>V − E + F</strong> remains 2.",
+    topologyDescription: "After cuts appear, each original edge first contributes two new vertices. At 50%, the pair merges at the edge midpoint. Throughout the process, <strong>V − E + F</strong> remains 2.",
     faces: "Faces",
     edges: "Edges",
     vertices: "Vertices",
@@ -132,19 +156,23 @@ const translations = {
     dualityDescription: "The dodecahedron and icosahedron are duals: every face of one corresponds to a vertex of the other, while their edges pair one-to-one. Their face and vertex counts therefore exchange places.",
     faceUnit: "faces",
     vertexUnit: "vertices",
-    dualityCaveat: "<strong>Important:</strong> the truncated dodecahedron and truncated icosahedron have the same F, E, and V, but they are <strong>not duals</strong>. Their actual duals are the triakis icosahedron and pentakis dodecahedron.",
+    dualityCaveat: "<strong>Important:</strong> at 33%, the two truncated solids have the same F, E, and V, but they are <strong>not duals</strong>. Continue to 50%, and both paths converge on the same icosidodecahedron.",
     footerTagline: "See geometry through interaction, not memorization.",
     backToTop: "Back to top",
     dialogTitle: "Start exploring in three steps",
-    dialogStep1: "<strong>Move the truncation depth.</strong> Both models change together; translucent red corners show the material being removed.",
+    dialogStep1: "<strong>Move the truncation depth.</strong> Both models travel together from 0%, through uniform truncation at 33%, and meet at rectification at 50%.",
     dialogStep2: "<strong>Change the view mode.</strong> Use wireframe for topology, X-ray for rear faces, or explode every face outward.",
     dialogStep3: "<strong>Drag either model.</strong> Rotate it from every angle; use the wheel or a two-finger gesture to zoom.",
     dodecaBase: "Dodecahedron",
     dodecaProgress: "Truncating dodecahedron",
-    dodecaResult: "Truncated dodecahedron",
+    dodecaUniform: "Truncated dodecahedron",
+    dodecaDeep: "Deep-truncated dodecahedron",
+    dodecaRectified: "Icosidodecahedron",
     icosaBase: "Icosahedron",
     icosaProgress: "Truncating icosahedron",
-    icosaResult: "Truncated icosahedron",
+    icosaUniform: "Truncated icosahedron",
+    icosaDeep: "Deep-truncated icosahedron",
+    icosaRectified: "Icosidodecahedron",
     pentagon: "Pentagons",
     triangle: "Triangles",
     decagon: "Decagons",
@@ -155,6 +183,7 @@ const translations = {
     darkMode: "Switch to dark mode",
     switchLanguage: "切換為中文",
     depthAria: (depth, status) => `${depth} percent, ${status}`,
+    sharedAt: (depth) => `at ${depth}%`,
     advancedTitle: "Advanced view",
     showRemoved: "Show removed corners",
     rotationSpeed: "Rotation speed",
@@ -325,7 +354,7 @@ class ModelViewer {
 
   updateGeometry(depth) {
     this.depth = depth;
-    const amount = (depth / MAX_DEPTH) * UNIFORM_TRUNCATION;
+    const amount = depthToAmount(depth);
     const data = truncatePolyhedron(this.polyhedron, amount);
     clearObject(this.faceGroup);
     clearObject(this.fragmentGroup);
@@ -372,8 +401,8 @@ class ModelViewer {
       record.container.position.set(...record.direction).multiplyScalar(offset);
     });
 
-    const fragmentOpacity = Math.sin(progress * Math.PI) * 0.42;
-    this.materials.removed.opacity = Math.max(0.06, fragmentOpacity);
+    const fragmentOpacity = 0.18 + Math.sin(progress * Math.PI) * 0.24;
+    this.materials.removed.opacity = fragmentOpacity;
     this.fragmentGroup.visible = this.showRemoved && this.depth > CUT_THRESHOLD && !exploded;
     this.fragmentRecords.forEach((mesh) => {
       mesh.position.set(...mesh.userData.direction).multiplyScalar(0.09 + progress * 0.28);
@@ -480,7 +509,7 @@ const elements = {
 };
 
 const state = {
-  depth: MAX_DEPTH,
+  depth: UNIFORM_DEPTH,
   direction: 1,
   language: loadPreference("polyhedra-language", "zh"),
   mode: "solid",
@@ -525,7 +554,13 @@ function phaseForDepth(depth) {
     return "base";
   }
   if (depth >= MAX_DEPTH - 0.05) {
-    return "result";
+    return "rectified";
+  }
+  if (Math.abs(depth - UNIFORM_DEPTH) <= 0.05) {
+    return "uniform";
+  }
+  if (depth > UNIFORM_DEPTH) {
+    return "deep";
   }
   return "progress";
 }
@@ -541,7 +576,13 @@ function statusForDepth(depth) {
   if (depth <= CUT_THRESHOLD) {
     return copy.originalShape;
   }
-  return depth >= MAX_DEPTH - 0.05 ? copy.finishedShape : copy.formingShape;
+  if (depth >= MAX_DEPTH - 0.05) {
+    return copy.rectifiedShape;
+  }
+  if (Math.abs(depth - UNIFORM_DEPTH) <= 0.05) {
+    return copy.uniformShape;
+  }
+  return depth > UNIFORM_DEPTH ? copy.deepShape : copy.formingShape;
 }
 
 function setText(selector, value) {
@@ -559,12 +600,16 @@ function setStats(prefix, stats, faceA, faceB, truncated) {
   setText(`#${prefix}-face-a-label`, faceA.label);
   setText(`#${prefix}-face-b`, faceB.count);
   setText(`#${prefix}-face-b-label`, faceB.label);
+  document.querySelector(`[data-stats="${prefix}hedron"] .face-breakdown > div:first-child .face-icon`).className = `face-icon ${faceA.shape}`;
+  document.querySelector(`#${prefix}-face-b-row .face-icon`).className = `face-icon ${faceB.shape}`;
   document.querySelector(`#${prefix}-face-b-row`).hidden = !truncated;
 }
 
 function updateExperience() {
   const depth = Number(state.depth.toFixed(1));
   const truncated = depth > CUT_THRESHOLD;
+  const rectified = depth >= MAX_DEPTH - 0.05;
+  const amount = depthToAmount(depth);
   const phase = phaseForDepth(depth);
   const copy = currentCopy();
   const status = statusForDepth(depth);
@@ -581,24 +626,43 @@ function updateExperience() {
   setText("#dodeca-status", status);
   setText("#icosa-status", status);
 
-  const dodecaStats = topologyFor(dodecahedron, truncated);
-  const icosaStats = topologyFor(icosahedron, truncated);
+  const dodecaStats = topologyFor(dodecahedron, amount);
+  const icosaStats = topologyFor(icosahedron, amount);
   setStats(
     "dodeca",
     dodecaStats,
-    { label: truncated ? copy.decagon : copy.pentagon, count: 12 },
-    { label: copy.triangle, count: truncated ? 20 : 0 },
+    {
+      label: truncated && !rectified ? copy.decagon : copy.pentagon,
+      count: 12,
+      shape: truncated && !rectified ? "decagon" : "pentagon",
+    },
+    { label: copy.triangle, count: truncated ? 20 : 0, shape: "triangle" },
     truncated,
   );
   setStats(
     "icosa",
     icosaStats,
-    { label: truncated ? copy.hexagon : copy.triangle, count: 20 },
-    { label: copy.pentagon, count: truncated ? 12 : 0 },
+    {
+      label: truncated && !rectified ? copy.hexagon : copy.triangle,
+      count: 20,
+      shape: truncated && !rectified ? "hexagon" : "triangle",
+    },
+    { label: copy.pentagon, count: truncated ? 12 : 0, shape: "pentagon" },
     truncated,
   );
 
-  elements.dualStatus.textContent = truncated ? copy.dualCut : copy.dualBase;
+  setText("#shared-label", truncated ? copy.sameTotals : copy.dualBase);
+  setText(
+    "#shared-totals",
+    truncated
+      ? `${dodecaStats.faces} · ${dodecaStats.edges} · ${dodecaStats.vertices}`
+      : `${dodecaStats.faces}↔${icosaStats.faces} · ${dodecaStats.edges} · ${dodecaStats.vertices}↔${icosaStats.vertices}`,
+  );
+  setText("#shared-depth", copy.sharedAt(depth));
+
+  elements.dualStatus.textContent = rectified
+    ? copy.dualRectified
+    : (truncated ? copy.dualCut : copy.dualBase);
   viewers.forEach((viewer) => viewer.updateGeometry(depth));
 }
 
