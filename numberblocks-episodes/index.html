@@ -41,8 +41,10 @@
     backdrop-filter: blur(3px); transition: background .12s ease;
   }
   .lang-btn:hover { background: rgba(0,0,0,.4); }
-  header h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: .5px; }
-  header p { margin: 0; font-size: .85rem; opacity: .95; }
+  header h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: .5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.55), 0 0 2px rgba(0,0,0,.35); }
+  header p { margin: 0; font-size: .85rem; opacity: .95;
+    text-shadow: 0 1px 2px rgba(0,0,0,.55); }
   header a { color: #fff; text-decoration: underline; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 18px 16px 60px; }
   .panel {
@@ -51,18 +53,34 @@
   }
   .filter-group { margin-bottom: 14px; }
   .filter-group:last-child { margin-bottom: 0; }
+  .filter-toggle {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: none; border: none; color: var(--ink); cursor: pointer;
+    font-size: .92rem; font-weight: 700; padding: 0; text-align: left;
+  }
+  .filter-caret { margin-left: auto; color: var(--muted); transition: transform .15s ease; }
+  .filter-panel.collapsed .filter-caret { transform: rotate(-90deg); }
+  .filter-panel.collapsed .filter-body { display: none; }
+  .filter-body { margin-top: 14px; }
   .filter-label {
     font-size: .72rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: .06em; color: var(--muted); margin-bottom: 7px;
   }
-  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chips {
+    display: flex; flex-wrap: nowrap; gap: 7px;
+    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .chips::-webkit-scrollbar { height: 6px; }
+  .chips::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
   .chip {
+    flex: 0 0 auto; white-space: nowrap;
     border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
     padding: 6px 13px; border-radius: 999px; font-size: .84rem; cursor: pointer;
     transition: all .12s ease; user-select: none; font-weight: 600;
   }
   .chip:hover { border-color: #4a5568; }
-  .chip.active { color: #fff; border-color: transparent; }
+  .chip.active { color: #fff; border-color: transparent; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
   .chip.active[data-kind="series"] { background: #64748b; }
   .chip.active[data-value="all"] { background: #64748b; }
   .chip.lv1.active { background: var(--lv1); }
@@ -100,25 +118,27 @@
     color: var(--muted); cursor: pointer; white-space: nowrap; user-select: none;
   }
   thead th:hover { color: var(--ink); }
+  thead th.no-sort { cursor: default; }
+  thead th.no-sort:hover { color: var(--muted); }
   thead th .arrow { opacity: .35; font-size: .7rem; }
   thead th.sorted .arrow { opacity: 1; color: #38bdf8; }
   tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tbody tr:hover { background: var(--row-hover); }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
-  .watch-cell { text-align: center; width: 1%; white-space: nowrap; }
+  .watch-cell { text-align: center; width: 44px; white-space: nowrap; padding-left: 6px; padding-right: 6px; }
   .watch-box { width: 18px; height: 18px; accent-color: #43a047; cursor: pointer; margin: 0; }
   tbody tr.watched { opacity: .45; }
   tbody tr.watched:hover { opacity: .8; }
   .series-tag {
     display: inline-block; padding: 2px 9px; border-radius: 6px;
     font-size: .78rem; font-weight: 700; color: #fff; white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,.4);
   }
   .lv-badge {
     display: inline-flex; align-items: center; justify-content: center;
     width: 26px; height: 26px; border-radius: 50%; color: #fff;
-    font-weight: 800; font-size: .82rem;
+    font-weight: 800; font-size: .82rem; text-shadow: 0 1px 2px rgba(0,0,0,.4);
   }
-  .lv-badge.lv3 { color: #1a2130; }
   .lv-badge.lvx { background: #2a3344; color: #8b95a7; font-size: 1rem; }
   .title-cell { font-weight: 600; display: flex; align-items: center; }
   .play-btn {
@@ -143,9 +163,14 @@
   .empty { text-align: center; padding: 40px; color: var(--muted); }
   .legend { font-size: .78rem; color: var(--muted); margin-top: 12px; }
   .legend b { color: var(--ink); }
+  .disclaimer {
+    font-size: .74rem; color: var(--muted); line-height: 1.6;
+    margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line);
+  }
+  .disclaimer b { color: var(--ink); font-weight: 600; }
   @media (max-width: 640px) {
-    .teaches { display: none; }
-    header h1 { font-size: 1.3rem; }
+    header h1 { font-size: 1.3rem; padding-right: 60px; }
+    table { min-width: 660px; }
   }
 </style>
 </head>
@@ -157,25 +182,31 @@
 </header>
 
 <div class="wrap">
-  <div class="panel">
-    <div class="filter-group">
-      <div class="filter-label" data-i18n="fSeries">Series</div>
-      <div class="chips" id="seriesChips"></div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-label" data-i18n="fLevel">Level</div>
-      <div class="chips" id="levelChips"></div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-label" data-i18n="fMarks">Marks</div>
-      <div class="chips">
-        <span class="chip toggle" data-toggle="song" data-i18n="song">♫ Has song</span>
-        <span class="chip toggle" data-toggle="fig" data-i18n="fig">𝔽 figured-out</span>
+  <div class="panel filter-panel" id="filterPanel">
+    <button class="filter-toggle" id="filterToggle" aria-expanded="true" aria-controls="filterBody">
+      <span data-i18n="filters">Filters</span>
+      <span class="filter-caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="filter-body" id="filterBody">
+      <div class="filter-group">
+        <div class="filter-label" data-i18n="fSeries">Series</div>
+        <div class="chips" id="seriesChips"></div>
       </div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-label" data-i18n="fWatch">Watched</div>
-      <div class="chips" id="watchChips"></div>
+      <div class="filter-group">
+        <div class="filter-label" data-i18n="fLevel">Level</div>
+        <div class="chips" id="levelChips"></div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label" data-i18n="fMarks">Marks</div>
+        <div class="chips">
+          <span class="chip toggle" data-toggle="song" data-i18n="song">♫ Has song</span>
+          <span class="chip toggle" data-toggle="fig" data-i18n="fig">𝔽 figured-out</span>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label" data-i18n="fWatch">Watched</div>
+        <div class="chips" id="watchChips"></div>
+      </div>
     </div>
   </div>
 
@@ -191,7 +222,7 @@
     <table>
       <thead>
         <tr>
-          <th class="watch-cell" data-sort="watched"><span data-i18n="thWatched">Seen</span> <span class="arrow"></span></th>
+          <th class="watch-cell no-sort"><span data-i18n="thWatched">Seen</span></th>
           <th class="num" data-sort="sortNo"><span data-i18n="thNo">No.</span> <span class="arrow"></span></th>
           <th data-sort="seriesLabel"><span data-i18n="thSeries">Series</span> <span class="arrow"></span></th>
           <th class="num" data-sort="ep"><span data-i18n="thEp">Ep.</span> <span class="arrow"></span></th>
@@ -206,6 +237,7 @@
   <div class="empty" id="empty" style="display:none"></div>
 
   <div class="legend" data-i18n-html="legend"></div>
+  <div class="disclaimer" data-i18n-html="disclaimer"></div>
 </div>
 
 <script>
@@ -594,18 +626,22 @@ const TEACHES_ZH = [
 ];
 
 const EPISODES = RAW.map((r, i) => ({
-  sortNo: r[0], displayNo: r[1], seriesLabel: r[2], ep: r[3],
+  sortNo: r[0], displayNo: String(i + 1), seriesLabel: r[2], ep: r[3],
   level: r[4], song: r[5], figured: r[6], title: r[7],
   teaches: { en: r[8], zh: TEACHES_ZH[i] },
   seriesGroup: r[2].replace(/[ab]$/, ""),
   levelSort: r[4] === null ? 99 : r[4],
 }));
 
+const LANG_KEY = "nb_lang";
 let lang = "en";
+try { const savedLang = localStorage.getItem(LANG_KEY); if (savedLang === "en" || savedLang === "zh") lang = savedLang; }
+catch (e) {}
 const I18N = {
   en: {
     title: "Numberblocks Episode List",
-    subtitle: '184 main episodes (188 incl. crossovers) &middot; filter &amp; sort by series / level &middot; Source: <a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    subtitle: '188 episodes (incl. Alphablocks crossovers) &middot; filter &amp; sort by series / level &middot; Source: <a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    filters: "Filters",
     fSeries: "Series", fLevel: "Level", fMarks: "Marks", fWatch: "Watched",
     all: "All", special: "No level", song: "♫ Has song", fig: "𝔽 figured-out",
     wWatched: "✓ Seen", wUnwatched: "Not seen",
@@ -617,12 +653,13 @@ const I18N = {
     count: (n, t, w) => "Showing " + n + " / " + t + " · Seen " + w,
     legend: '<b style="color:#ff5252">▶</b> Click to search this episode on YouTube as &ldquo;numberblocks S{season} E{ep}&rdquo; (specials / crossovers searched by title) &middot;<br>' +
       '<b>♫</b> has a song (<b>♫×2 / ♫×4</b> = multiple) &middot; <b>𝔽</b> a Numberblock is figured-out for the first time &middot; ' +
-      'Level colours follow the official curriculum (1 red · 2 orange · 3 yellow · 4 green · 5 blue; specials have no level).<br>' +
-      'From Series 6 on, numbers show as &ldquo;without crossover (with crossover)&rdquo;, since BBC iPlayer treats crossovers as a separate programme.',
+      'Level colours follow the official curriculum (1 red · 2 orange · 3 yellow · 4 green · 5 blue; specials have no level).',
+    disclaimer: 'Disclaimer: this is a personal, non-profit fan-made tool and is <b>not affiliated with, endorsed by, or associated with the BBC</b>. Numberblocks and all related characters and imagery are the property and copyright of the BBC.',
   },
   zh: {
     title: "Numberblocks 各集列表",
-    subtitle: '184 集正篇（含 crossover 共 188 集）&middot; 可依季 / Level 篩選與排序 &middot; 資料來源：<a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    subtitle: '共 188 集（含 crossover）&middot; 可依季 / Level 篩選與排序 &middot; 資料來源：<a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    filters: "篩選器 Filters",
     fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks", fWatch: "觀看狀態 Watched",
     all: "全部", special: "特別篇", song: "♫ 含歌曲", fig: "𝔽 figured-out",
     wWatched: "✓ 看過", wUnwatched: "未看",
@@ -634,8 +671,8 @@ const I18N = {
     count: (n, t, w) => "顯示 " + n + " / " + t + " 集 · 已看 " + w,
     legend: '<b style="color:#ff5252">▶</b> 點擊在 YouTube 以「numberblocks S季 E集」搜尋該集（特別篇／crossover 以標題搜尋）　·<br>' +
       '<b>♫</b> 含歌曲（<b>♫×2 / ♫×4</b> 為多首）　·　<b>𝔽</b> 該集有 Numberblock 被「figured-out」首次成形　· ' +
-      'Level 顏色對應官方課程等級（1 紅・2 橙・3 黃・4 綠・5 藍；特別篇無 Level）。<br>' +
-      'Series 6 起集數以「不含 crossover ／(含 crossover)」並列，因 BBC iPlayer 將 crossover 視為獨立節目。',
+      'Level 顏色對應官方課程等級（1 紅・2 橙・3 黃・4 綠・5 藍；特別篇無 Level）。',
+    disclaimer: '免責聲明：本網頁為個人非營利的粉絲小工具，<b>與 BBC 並無任何關聯，亦未獲其授權或背書</b>。Numberblocks 及所有相關卡通角色與圖像之版權均屬 BBC 所有。',
   },
 };
 
@@ -737,6 +774,7 @@ document.getElementById("reset").addEventListener("click", () => {
 document.querySelectorAll("thead th").forEach(th => {
   th.addEventListener("click", () => {
     const key = th.dataset.sort;
+    if (!key) return;
     if (state.sortKey === key) state.sortDir *= -1;
     else { state.sortKey = key; state.sortDir = 1; }
     render();
@@ -767,7 +805,6 @@ function render() {
   rows.sort((a, b) => {
     let va = a[key], vb = b[key];
     if (key === "teaches") { va = a.teaches[lang]; vb = b.teaches[lang]; }
-    if (key === "watched") { va = isWatched(a.sortNo) ? 1 : 0; vb = isWatched(b.sortNo) ? 1 : 0; }
     if (typeof va === "string") return va.localeCompare(vb) * dir;
     return (va - vb) * dir;
   });
@@ -775,6 +812,7 @@ function render() {
   // Update sort indicators
   document.querySelectorAll("thead th").forEach(th => {
     const arrow = th.querySelector(".arrow");
+    if (!arrow) return;
     if (th.dataset.sort === key) {
       th.classList.add("sorted");
       arrow.textContent = dir === 1 ? "▲" : "▼";
@@ -823,7 +861,8 @@ function render() {
     tr.appendChild(tdEp);
 
     const tdTitle = document.createElement("td");
-    tdTitle.className = "title-cell";
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "title-cell";
     const playBtn = document.createElement("button");
     playBtn.className = "play-btn";
     playBtn.setAttribute("aria-label", "play");
@@ -836,18 +875,19 @@ function render() {
       window.open("https://www.youtube.com/results?search_query=" +
         encodeURIComponent(query), "_blank", "noopener");
     });
-    tdTitle.appendChild(playBtn);
-    tdTitle.appendChild(document.createTextNode(e.title));
+    titleWrap.appendChild(playBtn);
+    titleWrap.appendChild(document.createTextNode(e.title));
     if (e.song) {
       const s = document.createElement("span");
       s.className = "mark song"; s.textContent = songMark(e.song);
-      tdTitle.appendChild(s);
+      titleWrap.appendChild(s);
     }
     if (e.figured) {
       const f = document.createElement("span");
       f.className = "mark fig"; f.textContent = "𝔽";
-      tdTitle.appendChild(f);
+      titleWrap.appendChild(f);
     }
+    tdTitle.appendChild(titleWrap);
     tr.appendChild(tdTitle);
 
     const tdLv = document.createElement("td");
@@ -888,8 +928,26 @@ function applyLang() {
 
 document.getElementById("langBtn").addEventListener("click", () => {
   lang = lang === "en" ? "zh" : "en";
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   applyLang();
 });
+
+// Collapsible filter panel, state persisted in localStorage
+const FILTERS_KEY = "nb_filters_collapsed";
+const filterPanel = document.getElementById("filterPanel");
+const filterToggle = document.getElementById("filterToggle");
+let filtersCollapsed = false;
+try { filtersCollapsed = localStorage.getItem(FILTERS_KEY) === "1"; } catch (e) {}
+function applyFiltersCollapsed() {
+  filterPanel.classList.toggle("collapsed", filtersCollapsed);
+  filterToggle.setAttribute("aria-expanded", String(!filtersCollapsed));
+}
+filterToggle.addEventListener("click", () => {
+  filtersCollapsed = !filtersCollapsed;
+  try { localStorage.setItem(FILTERS_KEY, filtersCollapsed ? "1" : "0"); } catch (e) {}
+  applyFiltersCollapsed();
+});
+applyFiltersCollapsed();
 
 applyLang();
 </script>
