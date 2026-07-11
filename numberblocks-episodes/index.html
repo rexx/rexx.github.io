@@ -72,6 +72,8 @@
   .chip.lv5.active { background: var(--lv5); }
   .chip.lvx.active { background: #90a4ae; }
   .chip.toggle.active { background: #6d28d9; }
+  .chip.wf-watched.active { background: #43a047; }
+  .chip.wf-unwatched.active { background: #607d8b; }
   .toolbar {
     display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
     justify-content: space-between;
@@ -103,6 +105,10 @@
   tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tbody tr:hover { background: var(--row-hover); }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+  .watch-cell { text-align: center; width: 1%; white-space: nowrap; }
+  .watch-box { width: 18px; height: 18px; accent-color: #43a047; cursor: pointer; margin: 0; }
+  tbody tr.watched { opacity: .45; }
+  tbody tr.watched:hover { opacity: .8; }
   .series-tag {
     display: inline-block; padding: 2px 9px; border-radius: 6px;
     font-size: .78rem; font-weight: 700; color: #fff; white-space: nowrap;
@@ -167,6 +173,10 @@
         <span class="chip toggle" data-toggle="fig" data-i18n="fig">𝔽 figured-out</span>
       </div>
     </div>
+    <div class="filter-group">
+      <div class="filter-label" data-i18n="fWatch">Watched</div>
+      <div class="chips" id="watchChips"></div>
+    </div>
   </div>
 
   <div class="panel">
@@ -181,6 +191,7 @@
     <table>
       <thead>
         <tr>
+          <th class="watch-cell" data-sort="watched"><span data-i18n="thWatched">Seen</span> <span class="arrow"></span></th>
           <th class="num" data-sort="sortNo"><span data-i18n="thNo">No.</span> <span class="arrow"></span></th>
           <th data-sort="seriesLabel"><span data-i18n="thSeries">Series</span> <span class="arrow"></span></th>
           <th class="num" data-sort="ep"><span data-i18n="thEp">Ep.</span> <span class="arrow"></span></th>
@@ -595,14 +606,15 @@ const I18N = {
   en: {
     title: "Numberblocks Episode List",
     subtitle: '184 main episodes (188 incl. crossovers) &middot; filter &amp; sort by series / level &middot; Source: <a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
-    fSeries: "Series", fLevel: "Level", fMarks: "Marks",
+    fSeries: "Series", fLevel: "Level", fMarks: "Marks", fWatch: "Watched",
     all: "All", special: "No level", song: "♫ Has song", fig: "𝔽 figured-out",
+    wWatched: "✓ Seen", wUnwatched: "Not seen",
     searchPh: "🔍 Search title or teaching topic…",
     reset: "Clear filters",
-    thNo: "No.", thSeries: "Series", thEp: "Ep.", thTitle: "Title", thLvl: "Lvl.", thTeaches: "Teaches",
+    thWatched: "Seen", thNo: "No.", thSeries: "Series", thEp: "Ep.", thTitle: "Title", thLvl: "Lvl.", thTeaches: "Teaches",
     empty: "No episodes match the filters.",
     langBtn: "中文",
-    count: (n, t) => "Showing " + n + " / " + t,
+    count: (n, t, w) => "Showing " + n + " / " + t + " · Seen " + w,
     legend: '<b style="color:#ff5252">▶</b> Click to search this episode on YouTube as &ldquo;numberblocks S{season} E{ep}&rdquo; (specials / crossovers searched by title) &middot;<br>' +
       '<b>♫</b> has a song (<b>♫×2 / ♫×4</b> = multiple) &middot; <b>𝔽</b> a Numberblock is figured-out for the first time &middot; ' +
       'Level colours follow the official curriculum (1 red · 2 orange · 3 yellow · 4 green · 5 blue; specials have no level).<br>' +
@@ -611,14 +623,15 @@ const I18N = {
   zh: {
     title: "Numberblocks 各集列表",
     subtitle: '184 集正篇（含 crossover 共 188 集）&middot; 可依季 / Level 篩選與排序 &middot; 資料來源：<a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
-    fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks",
+    fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks", fWatch: "觀看狀態 Watched",
     all: "全部", special: "特別篇", song: "♫ 含歌曲", fig: "𝔽 figured-out",
+    wWatched: "✓ 看過", wUnwatched: "未看",
     searchPh: "🔍 搜尋標題或教學主題…",
     reset: "清除篩選",
-    thNo: "No.", thSeries: "季", thEp: "Ep.", thTitle: "標題", thLvl: "Lvl.", thTeaches: "教學主題",
+    thWatched: "看過", thNo: "No.", thSeries: "季", thEp: "Ep.", thTitle: "標題", thLvl: "Lvl.", thTeaches: "教學主題",
     empty: "沒有符合條件的集數。",
     langBtn: "EN",
-    count: (n, t) => "顯示 " + n + " / " + t + " 集",
+    count: (n, t, w) => "顯示 " + n + " / " + t + " 集 · 已看 " + w,
     legend: '<b style="color:#ff5252">▶</b> 點擊在 YouTube 以「numberblocks S季 E集」搜尋該集（特別篇／crossover 以標題搜尋）　·<br>' +
       '<b>♫</b> 含歌曲（<b>♫×2 / ♫×4</b> 為多首）　·　<b>𝔽</b> 該集有 Numberblock 被「figured-out」首次成形　· ' +
       'Level 顏色對應官方課程等級（1 紅・2 橙・3 黃・4 綠・5 藍；特別篇無 Level）。<br>' +
@@ -637,7 +650,18 @@ const SERIES_ORDER = ["Series 1","Series 2","Series 3","Series 4","Series 5",
   "Specials","Crossover","Series 6","Series 7","Series 8"];
 
 const state = { series: "all", level: "all", song: false, fig: false, search: "",
-  sortKey: "sortNo", sortDir: 1 };
+  watch: "all", sortKey: "sortNo", sortDir: 1 };
+
+// Watched tracking, persisted in localStorage keyed by episode sortNo
+const WATCHED_KEY = "nb_watched";
+let watched = {};
+try { watched = JSON.parse(localStorage.getItem(WATCHED_KEY) || "{}") || {}; }
+catch (e) { watched = {}; }
+function isWatched(no) { return !!watched[no]; }
+function toggleWatched(no) {
+  if (watched[no]) delete watched[no]; else watched[no] = 1;
+  try { localStorage.setItem(WATCHED_KEY, JSON.stringify(watched)); } catch (e) {}
+}
 
 // Build series chips
 const seriesChips = document.getElementById("seriesChips");
@@ -660,6 +684,17 @@ levelChips.appendChild(allLevelChip);
 const specialLevelChip = makeChip("", "level", "x", "lvx");
 specialLevelChip.dataset.i18n = "special";
 levelChips.appendChild(specialLevelChip);
+
+const watchChips = document.getElementById("watchChips");
+const allWatchChip = makeChip("", "watch", "all", "active");
+allWatchChip.dataset.i18n = "all";
+watchChips.appendChild(allWatchChip);
+const seenChip = makeChip("", "watch", "watched", "wf-watched");
+seenChip.dataset.i18n = "wWatched";
+watchChips.appendChild(seenChip);
+const unseenChip = makeChip("", "watch", "unwatched", "wf-unwatched");
+unseenChip.dataset.i18n = "wUnwatched";
+watchChips.appendChild(unseenChip);
 
 // Chip click handlers
 document.querySelectorAll(".chips").forEach(group => {
@@ -686,12 +721,14 @@ document.getElementById("search").addEventListener("input", e => {
 
 document.getElementById("reset").addEventListener("click", () => {
   state.series = "all"; state.level = "all"; state.song = false;
-  state.fig = false; state.search = "";
+  state.fig = false; state.search = ""; state.watch = "all";
   document.getElementById("search").value = "";
   document.querySelectorAll(".chip.toggle").forEach(c => c.classList.remove("active"));
   document.querySelectorAll('.chip[data-kind="series"]').forEach(c =>
     c.classList.toggle("active", c.dataset.value === "all"));
   document.querySelectorAll('.chip[data-kind="level"]').forEach(c =>
+    c.classList.toggle("active", c.dataset.value === "all"));
+  document.querySelectorAll('.chip[data-kind="watch"]').forEach(c =>
     c.classList.toggle("active", c.dataset.value === "all"));
   render();
 });
@@ -717,6 +754,8 @@ function render() {
     }
     if (state.song && e.song === 0) return false;
     if (state.fig && e.figured === 0) return false;
+    if (state.watch === "watched" && !isWatched(e.sortNo)) return false;
+    if (state.watch === "unwatched" && isWatched(e.sortNo)) return false;
     if (state.search) {
       const hay = (e.title + " " + e.teaches).toLowerCase();
       if (!hay.includes(state.search)) return false;
@@ -728,6 +767,7 @@ function render() {
   rows.sort((a, b) => {
     let va = a[key], vb = b[key];
     if (key === "teaches") { va = a.teaches[lang]; vb = b.teaches[lang]; }
+    if (key === "watched") { va = isWatched(a.sortNo) ? 1 : 0; vb = isWatched(b.sortNo) ? 1 : 0; }
     if (typeof va === "string") return va.localeCompare(vb) * dir;
     return (va - vb) * dir;
   });
@@ -750,6 +790,21 @@ function render() {
 
   rows.forEach(e => {
     const tr = document.createElement("tr");
+    if (isWatched(e.sortNo)) tr.className = "watched";
+
+    const tdWatch = document.createElement("td");
+    tdWatch.className = "watch-cell";
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.className = "watch-box";
+    box.checked = isWatched(e.sortNo);
+    box.setAttribute("aria-label", "watched");
+    box.addEventListener("change", () => {
+      toggleWatched(e.sortNo);
+      render();
+    });
+    tdWatch.appendChild(box);
+    tr.appendChild(tdWatch);
 
     const tdNo = document.createElement("td");
     tdNo.className = "num"; tdNo.textContent = e.displayNo;
@@ -818,7 +873,8 @@ function render() {
   const emptyEl = document.getElementById("empty");
   emptyEl.textContent = I18N[lang].empty;
   emptyEl.style.display = rows.length ? "none" : "block";
-  document.getElementById("count").textContent = I18N[lang].count(rows.length, EPISODES.length);
+  const watchedCount = EPISODES.reduce((n, e) => n + (isWatched(e.sortNo) ? 1 : 0), 0);
+  document.getElementById("count").textContent = I18N[lang].count(rows.length, EPISODES.length, watchedCount);
 }
 
 function applyLang() {
