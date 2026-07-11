@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numberblocks 各集列表</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --lv1: #ef5350; --lv2: #ffa726; --lv3: #ffca28;
+    --lv4: #66bb6a; --lv5: #29b6f6;
+    --bg: #0e1320; --card: #171e2e; --ink: #e6e9ef; --muted: #8b95a7;
+    --line: #2a3344; --chip-bg: #1e2636; --head-bg: #141b29; --row-hover: #1c2536;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+      "PingFang TC", "Microsoft JhengHei", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    position: relative;
+    background: linear-gradient(90deg,#e53935,#fb8c00,#f9a825,#43a047,#039be5,#8e24aa);
+    color: #fff; padding: 22px 20px 20px;
+  }
+  .lang-btn {
+    position: absolute; top: 18px; right: 20px;
+    background: rgba(0,0,0,.25); color: #fff;
+    border: 1.5px solid rgba(255,255,255,.6); border-radius: 8px;
+    padding: 6px 15px; font-size: .85rem; font-weight: 700; cursor: pointer;
+    backdrop-filter: blur(3px); transition: background .12s ease;
+  }
+  .lang-btn:hover { background: rgba(0,0,0,.4); }
+  header h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: .5px; }
+  header p { margin: 0; font-size: .85rem; opacity: .95; }
+  header a { color: #fff; text-decoration: underline; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 18px 16px 60px; }
+  .panel {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(16,24,40,.04);
+  }
+  .filter-group { margin-bottom: 14px; }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-label {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--muted); margin-bottom: 7px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
+    padding: 6px 13px; border-radius: 999px; font-size: .84rem; cursor: pointer;
+    transition: all .12s ease; user-select: none; font-weight: 600;
+  }
+  .chip:hover { border-color: #4a5568; }
+  .chip.active { color: #fff; border-color: transparent; }
+  .chip.active[data-kind="series"] { background: #64748b; }
+  .chip.active[data-value="all"] { background: #64748b; }
+  .chip.lv1.active { background: var(--lv1); }
+  .chip.lv2.active { background: var(--lv2); }
+  .chip.lv3.active { background: var(--lv3); }
+  .chip.lv4.active { background: var(--lv4); }
+  .chip.lv5.active { background: var(--lv5); }
+  .chip.lvx.active { background: #90a4ae; }
+  .chip.toggle.active { background: #6d28d9; }
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    justify-content: space-between;
+  }
+  .search {
+    flex: 1 1 240px; min-width: 200px;
+    border: 1.5px solid var(--line); border-radius: 10px;
+    padding: 9px 12px; font-size: .9rem;
+    background: var(--chip-bg); color: var(--ink);
+  }
+  .search:focus { outline: none; border-color: #039be5; }
+  .count { font-size: .84rem; color: var(--muted); white-space: nowrap; }
+  .btn-reset {
+    border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
+    border-radius: 10px; padding: 9px 14px; font-size: .84rem; cursor: pointer; font-weight: 600;
+  }
+  .btn-reset:hover { background: #232c3e; }
+  .table-scroll { overflow-x: auto; border-radius: 14px; border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: .88rem; }
+  thead th {
+    position: sticky; top: 0; background: var(--head-bg); z-index: 2;
+    text-align: left; padding: 11px 12px; border-bottom: 2px solid var(--line);
+    font-size: .74rem; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); cursor: pointer; white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--ink); }
+  thead th .arrow { opacity: .35; font-size: .7rem; }
+  thead th.sorted .arrow { opacity: 1; color: #38bdf8; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:hover { background: var(--row-hover); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+  .series-tag {
+    display: inline-block; padding: 2px 9px; border-radius: 6px;
+    font-size: .78rem; font-weight: 700; color: #fff; white-space: nowrap;
+  }
+  .lv-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%; color: #fff;
+    font-weight: 800; font-size: .82rem;
+  }
+  .lv-badge.lv3 { color: #1a2130; }
+  .lv-badge.lvx { background: #2a3344; color: #8b95a7; font-size: 1rem; }
+  .title-cell { font-weight: 600; display: flex; align-items: center; }
+  .play-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 22px; min-width: 28px; border-radius: 6px;
+    margin-right: 9px; padding: 0; border: none;
+    background: #ff0000; cursor: pointer;
+    transition: transform .1s ease, background .12s ease;
+  }
+  .play-btn::before {
+    content: ""; width: 0; height: 0;
+    border-style: solid; border-width: 5px 0 5px 8px;
+    border-color: transparent transparent transparent #fff;
+    margin-left: 1px;
+  }
+  .play-btn:hover { background: #cc0000; transform: scale(1.1); }
+  .play-btn:active { transform: scale(.95); }
+  .mark { margin-left: 5px; font-size: .82rem; }
+  .mark.song { color: #a78bfa; }
+  .mark.fig { color: #ffa726; }
+  .teaches { color: var(--muted); font-size: .82rem; }
+  .empty { text-align: center; padding: 40px; color: var(--muted); }
+  .legend { font-size: .78rem; color: var(--muted); margin-top: 12px; }
+  .legend b { color: var(--ink); }
+  @media (max-width: 640px) {
+    .teaches { display: none; }
+    header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <button id="langBtn" class="lang-btn" data-i18n="langBtn">中文</button>
+  <h1 data-i18n="title">Numberblocks Episode List</h1>
+  <p data-i18n-html="subtitle"></p>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="filter-group">
+      <div class="filter-label" data-i18n="fSeries">Series</div>
+      <div class="chips" id="seriesChips"></div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label" data-i18n="fLevel">Level</div>
+      <div class="chips" id="levelChips"></div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label" data-i18n="fMarks">Marks</div>
+      <div class="chips">
+        <span class="chip toggle" data-toggle="song" data-i18n="song">♫ Has song</span>
+        <span class="chip toggle" data-toggle="fig" data-i18n="fig">𝔽 figured-out</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="toolbar">
+      <input type="text" class="search" id="search" data-i18n-ph="searchPh" placeholder="Search title or teaching topic…">
+      <span class="count" id="count"></span>
+      <button class="btn-reset" id="reset" data-i18n="reset">Clear filters</button>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th class="num" data-sort="sortNo"><span data-i18n="thNo">No.</span> <span class="arrow"></span></th>
+          <th data-sort="seriesLabel"><span data-i18n="thSeries">Series</span> <span class="arrow"></span></th>
+          <th class="num" data-sort="ep"><span data-i18n="thEp">Ep.</span> <span class="arrow"></span></th>
+          <th data-sort="title"><span data-i18n="thTitle">Title</span> <span class="arrow"></span></th>
+          <th data-sort="levelSort"><span data-i18n="thLvl">Lvl.</span> <span class="arrow"></span></th>
+          <th data-sort="teaches"><span data-i18n="thTeaches">Teaches</span> <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty" style="display:none"></div>
+
+  <div class="legend" data-i18n-html="legend"></div>
+</div>
+
+<script>
+// [sortNo, displayNo, seriesLabel, ep, level, song(0/1/2/4), figured(0/1), title, teaches]
+const RAW = [
+[1,"1","Series 1",1,1,1,0,"One","Number 1"],
+[2,"2","Series 1",2,1,0,0,"Another One","Number 2, first time showing addition (1+1=2)"],
+[3,"3","Series 1",3,1,1,0,"Two","Number 2"],
+[4,"4","Series 1",4,1,1,0,"Three","Number 3"],
+[5,"5","Series 1",5,1,0,0,"One, Two, Three!","Counting / ordinal numerals to 3"],
+[6,"6","Series 1",6,1,1,0,"Four","Number 4 and squares"],
+[7,"7","Series 1",7,1,1,0,"Five","Number 5"],
+[8,"8","Series 1",8,1,0,0,"Three Little Pigs","Counting to 4, value identification"],
+[9,"9","Series 1",9,1,1,0,"Off We Go","Counting to 5 / number sequencing"],
+[10,"10","Series 1",10,1,0,0,"How to Count","How to count"],
+[11,"11","Series 1",11,1,0,0,"Stampolines","Number arrangements"],
+[12,"12","Series 1",12,1,1,0,"The Whole of Me","Number bonds (e.g. 3 = 1+2)"],
+[13,"13","Series 1",13,1,0,0,"The Terrible Twos","Divisions of 1-4"],
+[14,"14","Series 1",14,1,0,0,"Holes","Adding and subtracting by one"],
+[15,"15","Series 1",15,1,0,0,"Hide and Seek","Subitizing 5 via number bonds"],
+[16,"16","Series 2",1,2,1,0,"Six","Number 6"],
+[17,"17","Series 2",2,2,1,0,"Seven","Number 7"],
+[18,"18","Series 2",3,2,1,0,"Eight","Number 8"],
+[19,"19","Series 2",4,2,1,0,"Nine","Number 9 and square numbers"],
+[20,"20","Series 2",5,2,1,0,"Ten","Number 10"],
+[21,"21","Series 2",6,2,1,0,"Just Add One","Counting to 10"],
+[22,"22","Series 2",7,2,0,0,"Blast Off","Number bonds to 10"],
+[23,"23","Series 2",8,2,0,0,"Counting Sheep","Divisions of 6"],
+[24,"24","Series 2",9,2,0,0,"Double Trouble","Doubling and halving"],
+[25,"25","Series 2",10,2,0,0,"The Three Threes","Number 9 as 3+3+3"],
+[26,"26","Series 2",11,2,0,0,"Odds and Evens","Odd and even numbers"],
+[27,"27","Series 2",12,2,0,0,"Fluffies","Addition / number bonds to 7"],
+[28,"28","Series 2",13,2,0,0,"The Two Tree","Adding and subtracting by two"],
+[29,"29","Series 2",14,2,0,0,"Numberblock Castle","Addition using 1-4"],
+[30,"30","Series 2",15,2,1,0,"Ten Green Bottles","Subtracting by 1 / counting down from 10 to 1"],
+[31,"31","Series 3a",1,1,0,0,"Once Upon a Time","Numbers 1-5 recap"],
+[32,"32","Series 3a",2,1,0,0,"Blockzilla","Comparing numbers, greater/less than, signs < >"],
+[33,"33","Series 3a",3,1,1,0,"The Numberblocks Express","Repeated addition/subtraction, all partitions of 5"],
+[34,"34","Series 3a",4,1,0,0,"Fruit Salad","Visual representation of number bonds"],
+[35,"35","Series 3a",5,1,1,0,"Zero","Number 0 / nothing as a number"],
+[36,"36","Series 3a",6,2,0,0,"Now We Are Six To Ten","Numbers 6-10 recap"],
+[37,"37","Series 3a",7,2,0,0,"Numberblobs","Counting amounts, introducing the Numberblobs"],
+[38,"38","Series 3a",8,2,0,0,"Building Blocks","Arrangements of numbers 6-10"],
+[39,"39","Series 3a",9,2,1,0,"Peekaboo!","Visual representation of comparing numbers"],
+[40,"40","Series 3a",10,2,0,0,"Hiccups","Number bonds / partitions of 6-10"],
+[41,"41","Series 3a",11,2,1,0,"What's the Difference?","Subtraction and its anticommutative property"],
+[42,"42","Series 3a",12,2,0,0,"Numberblock Rally","Addition / subtraction with 1-10"],
+[43,"43","Series 3a",13,2,1,0,"Five and Friends","Addition with 5"],
+[44,"44","Series 3a",14,2,0,0,"Octoblock to the Rescue!","Number bonds to 8"],
+[45,"45","Series 3a",15,2,1,0,"Ten Again","Number bonds to 10"],
+[46,"46","Series 3b",1,2,0,0,"Flatland","2D shapes"],
+[47,"47","Series 3b",2,2,0,0,"Pattern Palace","Simple patterns"],
+[48,"48","Series 3b",3,2,0,0,"The Legend of Big Tum","Missing numbers and simple sums"],
+[49,"49","Series 3b",4,2,0,0,"Mirror, Mirror","Multiplication using 'a lots of b'"],
+[50,"50","Series 3b",5,2,0,0,"The Wrong Number","Identification of numbers using properties"],
+[51,"51","Series 3b",6,3,1,0,"Eleven","Number 11 as 10+1"],
+[52,"52","Series 3b",7,3,1,0,"Twelve","Number 12 as 10+2 and her divisors"],
+[53,"53","Series 3b",8,3,0,0,"The Way of the Rectangle","Divisors of numbers, visualized with rectangles"],
+[54,"54","Series 3b",9,3,0,0,"Ride the Rays","Number divisibility"],
+[55,"55","Series 3b",10,3,0,0,"Block Star","Divisions of 12"],
+[56,"56","Series 3b",11,3,1,0,"Thirteen","Number 13 as 10+3"],
+[57,"57","Series 3b",12,3,1,0,"Fourteen","Number 14 as 10+4 and 7+7, doubling numbers"],
+[58,"58","Series 3b",13,3,1,0,"Fifteen","Number 15 as 10+5 and 1+2+3+4+5"],
+[59,"59","Series 3b",14,3,0,0,"Tween Scenes","11-15 recap"],
+[60,"60","Series 3b",15,3,0,0,"Step Squads","Triangular numbers 1, 3, 6, 10, 15"],
+[61,"61","Series 4a",1,3,0,0,"Fifteen's Minute of Fame","0-15 recap"],
+[62,"62","Series 4a",2,3,0,0,"On Your Head","Place value and recognizing numerals"],
+[63,"63","Series 4a",3,3,0,0,"Ten's Place","Place value and simple two-digit addition/subtraction"],
+[64,"64","Series 4a",4,3,0,0,"Balancing Bridge","Addition beyond 10 (bridging through ten)"],
+[65,"65","Series 4a",5,3,1,0,"Sixteen","Number 16 and her properties (square, power of 2)"],
+[66,"66","Series 4a",6,3,0,0,"Square Club","Square numbers 1, 4, 9, 16"],
+[67,"67","Series 4a",7,3,1,0,"Seventeen","Number 17 as 10+7"],
+[68,"68","Series 4a",8,3,1,0,"Eighteen","Number 18 and his divisors"],
+[69,"69","Series 4a",9,3,0,0,"Loop the Loop","Divisors"],
+[70,"70","Series 4a",10,3,1,0,"Nineteen","Number 19, being prime / one-off"],
+[71,"71","Series 4a",11,3,1,0,"Twenty","Number 20 as two tens or ten twos"],
+[72,"72","Series 4a",12,3,0,0,"Tall Stories","16-20 recap"],
+[73,"73","Series 4a",13,3,0,0,"Flights of Fancy","11-20 recap, by place value"],
+[74,"74","Series 4a",14,3,1,0,"I Can Count to Twenty","Counting to 20, skip counting, sneak-peek of 21"],
+[75,"75","Series 4a",15,3,0,0,"Heist","16-20 hidden numbers recap"],
+[76,"76","Series 4b",1,3,0,0,"Sign of the Times","Multiplication and its symbol"],
+[77,"77","Series 4b",2,3,0,0,"Fun Times Fair","Multiplication to 12"],
+[78,"78","Series 4b",3,3,0,0,"The Lair of Shares","Division / sharing things equally"],
+[79,"79","Series 4b",4,3,0,0,"Terrible Twosday","Division with remainders"],
+[80,"80","Series 4b",5,3,0,0,"Divide and Drive","Division as the opposite of multiplication, and its symbol"],
+[81,"81","Series 4b",6,4,0,1,"Twenty-One and On","Exploring numbers beyond 20 (21, 22, 23)"],
+[82,"82","Series 4b",7,4,0,1,"We're Going on a Square Hunt","Figuring out 25 by following a pattern"],
+[83,"83","Series 4b",8,4,0,0,"Thirty's Big Top","Numbers 30, 40, 50"],
+[84,"84","Series 4b",9,4,0,0,"Land of the Giants","10/20/30/40/50 as ten-times-bigger versions of 1-5"],
+[85,"85","Series 4b",10,4,1,0,"Fifty","Number 50 and counting in fives"],
+[86,"86","Series 4b",11,5,0,0,"Sixty's High Score","Numbers 60, 70, 80, 90"],
+[87,"87","Series 4b",12,5,0,0,"The Big One","Counting to 100"],
+[88,"88","Series 4b",13,5,1,0,"One Hundred","Number 100 and its properties, counting by 10s"],
+[89,"89","Series 4b",14,5,0,0,"One Thousand and One","Larger numbers (1000, 10000, 100000, 1000000)"],
+[90,"90","Series 4b",15,5,1,0,"More to Explore","Seasons 1-4 recap"],
+[91,"91","Series 5a",1,2,0,0,"Your Turn","Comparing numbers and number lines"],
+[92,"92","Series 5a",2,2,0,0,"Now You See Us","Writing numerals 0-9"],
+[93,"93","Series 5a",3,2,1,0,"Ten's Top Ten","Number bonds to 6, 7, 8, 9, 10"],
+[94,"94","Series 5a",4,2,0,0,"What's My Number?","Learn to see the amount without counting"],
+[95,"95","Series 5a",5,3,1,0,"Fun Times One Times Table","1 times table"],
+[96,"96","Series 5a",6,3,0,0,"The Many Friends of Twenty","Number bonds to 20"],
+[97,"97","Series 5a",7,3,0,0,"Ten Vaulting","Bridging through 10"],
+[98,"98","Series 5a",8,3,0,0,"Twoland","Counting by twos (up to 20)"],
+[99,"99","Series 5a",9,3,1,0,"Two Times Shoe Shop","2 times table"],
+[100,"100","Series 5a",10,3,0,0,"Odd Side Story","Odd/even numbers, adding them, squares as sums of odd numbers"],
+[101,"101","Series 5a",11,4,0,1,"How Rectangly!","Figuring out 23 and 24 by testing divisors"],
+[102,"102","Series 5a",12,4,0,0,"Rectangle Racers","Divisors of 12, 18, 20, 24"],
+[103,"103","Series 5a",13,4,0,0,"The Team Factor","Divisors and (indirectly) prime numbers"],
+[104,"104","Series 5a",14,4,0,1,"Hidden Talents","Number 26 and teams of numbers"],
+[105,"105","Series 5a",15,4,0,1,"Making Patterns","Numbers 27 and 28, figurate sequences, brief cube numbers"],
+[106,"106","Series 5b",1,4,0,0,"Now in 3D","Cube numbers 8 and 27, and (briefly) other 3D shapes"],
+[107,"107","Series 5b",2,4,0,1,"Club Picnic","Number properties, number 29 (introduces prime)"],
+[108,"108","Series 5b",3,4,0,0,"Too Many Threes","Multiples of 3 (up to 30)"],
+[109,"109","Series 5b",4,4,1,0,"Circus of Threes","3 times table"],
+[110,"110","Series 5b",5,4,1,1,"Figure It Out","How to figure out numbers"],
+[111,"111","Series 5b",6,4,0,0,"Snow Day Doubles","Number 32, powers of 2, doubling/halving"],
+[112,"112","Series 5b",7,4,0,0,"Steps Versus Squares","Triangular and square numbers, 36 is both"],
+[113,"113","Series 5b",8,4,0,0,"Puzzle Square","Solving puzzles (tessellation)"],
+[114,"114","Series 5b",9,4,1,0,"Four on the Floor","4 times table"],
+[115,"115","Series 5b",10,4,1,0,"Sky High Fives","5 times table"],
+[116,"116","Series 5b",11,5,0,0,"One Giant Step Squad","Triangular numbers, adding one-digits to two-digits"],
+[117,"117","Series 5b",12,5,0,0,"Square on the Moon","Bigger squares (49, 64, 81), binary intro, squares with holes"],
+[118,"118","Series 5b",13,5,1,0,"Heroes With Zeroes","10 times table"],
+[119,"119","Series 5b",14,5,1,0,"What If?","Asking questions; fractions, negative numbers, others"],
+[120,"120","Series 5b",15,5,0,0,"100 Ways to Leave the Planet","Seasons 1-5 recap"],
+[121,"121","Specials",1,null,2,0,"The Treasure of Hexagon Island","Solving puzzles (abstract reasoning)"],
+[122,"122","Specials",2,null,0,0,"Double Back","Doubling numbers"],
+[123,"123","Specials",3,null,4,0,"About Time","Reading analog clocks"],
+[124,"124","Specials",4,null,1,0,"The Twelve Days of Christmas","Summations of summations (tetrahedrons)"],
+[124.1,"(125)","Crossover",1,null,1,0,"Making Friends","Numberblocks x Alphablocks crossover"],
+[124.2,"(126)","Crossover",2,null,0,0,"Crossover","Numberblocks x Alphablocks crossover"],
+[124.3,"(127)","Crossover",3,null,0,0,"The Case of the Missing Blocks","Numberblocks x Alphablocks crossover"],
+[124.4,"(128)","Crossover",4,null,0,0,"The Blocks v Blocks Games","Numberblocks x Alphablocks crossover"],
+[125,"125 (129)","Series 6",1,2,0,0,"Painting by Numbers","Identifying amounts with and without help of colour"],
+[126,"126 (130)","Series 6",2,2,0,0,"Leap Blob","Skip counting on number lines"],
+[127,"127 (131)","Series 6",3,2,0,0,"Ice and Dice","Basic probability"],
+[128,"128 (132)","Series 6",4,2,0,0,"Go Go Domino","Dominoes and different ways of expressing value"],
+[129,"129 (133)","Series 6",5,2,1,0,"Ten in the Bed","Identifying amounts based on ten-frames"],
+[130,"130 (134)","Series 6",6,2,0,0,"Shape Party","2D shapes review"],
+[131,"131 (135)","Series 6",7,2,0,0,"Can We Have Our Ball Back?","3D shapes and their nets"],
+[132,"132 (136)","Series 6",8,2,0,0,"Cuboid Castle","Cuboids, prisms, and dimensions of 3D objects"],
+[133,"133 (137)","Series 6",9,2,1,0,"On My Way to Numberblock Fair","Following directions"],
+[134,"134 (138)","Series 6",10,2,0,0,"Octoblock and the Path of Justice","Reading maps"],
+[135,"135 (139)","Series 6",11,3,0,0,"Five's Handy Shop","Money and equivalence"],
+[136,"136 (140)","Series 6",12,3,0,0,"As Tall as the Sun","Measurement and comparison"],
+[137,"137 (141)","Series 6",13,3,0,0,"Feeding Time","Weight and weight conversion"],
+[138,"138 (142)","Series 6",14,3,0,0,"Rockets and Rekenreks","Rekenrek abacus"],
+[139,"139 (143)","Series 6",15,3,1,0,"The Pattern of Patterns","Identifying patterns and sequences"],
+[140,"140 (144)","Series 7",1,4,0,0,"Grid Unlocked","Full 5x5 times table, commutative property of multiplication"],
+[141,"141 (145)","Series 7",2,4,0,0,"Friendly Fours' Beach Day","Multiples of 4 up to 40"],
+[142,"142 (146)","Series 7",3,4,0,0,"All-Star Line-Up","Multiples of 5 up to 50"],
+[143,"143 (147)","Series 7",4,4,0,1,"Rescue Racers","Numbers 42 (6x7) and 48 (6x8)"],
+[144,"144 (148)","Series 7",5,5,0,0,"The Rolling Sixes","Multiples of 6 up to 60"],
+[145,"145 (149)","Series 7",6,5,1,0,"Remix the Sixes","6 times table"],
+[146,"146 (150)","Series 7",7,5,0,1,"Grid Games Galore","Numbers 54 (6x9) and 56 (7x8)"],
+[147,"147 (151)","Series 7",8,5,0,1,"The Rainbow Makers","Number 63 (7x9) and multiples of 7 up to 70"],
+[148,"148 (152)","Series 7",9,5,1,0,"Sail the Seven Seas","7 times table"],
+[149,"149 (153)","Series 7",10,5,0,0,"We Need Another Hero","Multiples of 8"],
+[150,"150 (154)","Series 7",11,5,1,1,"Super Eights Assemble","8 times table"],
+[151,"151 (155)","Series 7",12,5,0,0,"Seventy-Two's Super Surprise","Numbers 72 (8x9) and 80 (8x10)"],
+[152,"152 (156)","Series 7",13,5,0,0,"The Magical Nines","Multiples of 9 and the 9 times table finger trick"],
+[153,"153 (157)","Series 7",14,5,1,0,"Nine's Time to Shine","9 times table and how 9x = 10x - x"],
+[154,"154 (158)","Series 7",15,5,0,0,"Space Division","Full 10x10 times table"],
+[155,"155 (159)","Series 8a",1,3,0,0,"The Third Button","Telling time to the nearest hour and half hour"],
+[156,"156 (160)","Series 8a",2,3,0,0,"The Great Bug Race","Perimeter"],
+[157,"157 (161)","Series 8a",3,3,0,0,"The Big Picture","Finding area using certain shapes"],
+[158,"158 (162)","Series 8a",4,3,0,0,"Space Repair","Calculating area of rectangles by subitising"],
+[159,"159 (163)","Series 8a",5,3,0,0,"Capacity for Magic","Capacity"],
+[160,"160 (164)","Series 8a",6,1,0,0,"How Many Smoothies?","Commutative property of addition"],
+[161,"161 (165)","Series 8a",7,2,0,0,"Odd Block Club","Properties of odd numbers"],
+[162,"162 (166)","Series 8a",8,2,0,0,"Five Makes a Wish","Addition with 5"],
+[163,"163 (167)","Series 8a",9,2,0,0,"Number Rescue, Go!","Decomposing numbers 6-10"],
+[164,"164 (168)","Series 8a",10,2,1,0,"The Best House Band in Numberland","Part-Part-Whole with 6-10"],
+[165,"165 (169)","Series 8a",11,2,1,0,"Double Duets","Doubling and halving numbers recap"],
+[166,"166 (170)","Series 8a",12,3,0,0,"Double Doors, Double Locked","Doubling using 'five and a bit' method, symmetry"],
+[167,"167 (171)","Series 8a",13,3,0,0,"The All-Knowing Nine","Addition by bridging through 10"],
+[168,"168 (172)","Series 8a",14,3,0,0,"Subtraction Somersaults","Subtraction by bridging through 10 or 10's complement"],
+[169,"169 (173)","Series 8a",15,3,0,0,"Tenpin Tournament","Adding two one-digit numbers with a rekenrek, tallying"],
+[170,"170 (174)","Series 8b",16,2,0,0,"Five's Super Sorter","Sorting items by categories"],
+[171,"171 (175)","Series 8b",17,4,0,0,"Back in the Box!","Tally marks, data collection"],
+[172,"172 (176)","Series 8b",18,2,0,0,"Five's Fruit Festival","Pictograms, sampling data"],
+[173,"173 (177)","Series 8b",19,2,0,0,"I'll Vote for That!","Voting, reading voting/graph results"],
+[174,"174 (178)","Series 8b",20,4,0,0,"The Pyramid of Puzzles","Bar graphs"],
+[175,"175 (179)","Series 8b",21,5,0,0,"One's Fix-It Shop","Making wholes"],
+[176,"176 (180)","Series 8b",22,5,0,0,"Happy Campers","Dividing things into equal parts; ratios"],
+[177,"177 (181)","Series 8b",23,5,0,0,"The Mystery of Fraction Island","Concept of fractions and how they make a whole"],
+[178,"178 (182)","Series 8b",24,5,1,0,"Fractions Are a Piece of Cake","Depth of fractions, fraction notation"],
+[179,"179 (183)","Series 8b",25,5,0,0,"Octonaughty and the Fractionator","Division using unit fractions (n x 1/x = N)"],
+[180,"180 (184)","Series 8b",26,4,1,0,"You're Five Ones and I'm Five Tens","Arithmetic with ones/tens place, number bonds to 5 and 50"],
+[181,"181 (185)","Series 8b",27,4,0,0,"The Forest of Tens","Subtracting 10 from non-multiples of 10"],
+[182,"182 (186)","Series 8b",28,5,1,0,"All the Numbers I Can Be","Number bonds and factors of 100"],
+[183,"183 (187)","Series 8b",29,5,0,0,"The Rings of Unity","Place value and multi-digit arithmetic"],
+[184,"184 (188)","Series 8b",30,5,0,0,"The Space Signal","Factor recap, concept of infinity"],
+];
+
+// Chinese teaching topics, index-aligned with RAW
+const TEACHES_ZH = [
+"數字 1",
+"數字 2，首次示範加法 (1+1=2)",
+"數字 2",
+"數字 3",
+"數到 3／3 以內的序數",
+"數字 4 與正方形（平方數）",
+"數字 5",
+"數到 4、辨認數值",
+"數到 5／數字排序",
+"如何數數",
+"數的排列方式",
+"數的組成（例如 3 = 1+2）",
+"1–4 的分解",
+"加 1 與減 1",
+"透過數的組成直觀辨認 5",
+"數字 6",
+"數字 7",
+"數字 8",
+"數字 9 與平方數",
+"數字 10",
+"數到 10",
+"湊成 10 的數的組成",
+"6 的分解",
+"加倍與減半",
+"9 = 3+3+3",
+"奇數與偶數",
+"加法／湊成 7 的數的組成",
+"加 2 與減 2",
+"用 1–4 做加法",
+"減 1／從 10 倒數到 1",
+"數字 1–5 複習",
+"比較數字大小、大於／小於與符號 < >",
+"連加／連減、5 的所有分解",
+"數的組成的視覺呈現",
+"數字 0／把「沒有」當成一個數",
+"數字 6–10 複習",
+"數數量、介紹 Numberblobs",
+"數字 6–10 的排列方式",
+"比較數字大小的視覺呈現",
+"6–10 的數的組成／分解",
+"減法及其不可交換性",
+"1–10 的加減法",
+"與 5 有關的加法",
+"湊成 8 的數的組成",
+"湊成 10 的數的組成",
+"平面圖形",
+"簡單的規律",
+"找出缺少的數與簡單算式",
+"以「a 個 b」理解乘法",
+"用數的性質辨認數字",
+"數字 11 = 10+1",
+"數字 12 = 10+2 與其因數",
+"以長方形呈現數的因數",
+"數的整除性",
+"12 的分解",
+"數字 13 = 10+3",
+"數字 14 = 10+4 與 7+7、加倍",
+"數字 15 = 10+5 與 1+2+3+4+5",
+"11–15 複習",
+"三角形數 1、3、6、10、15",
+"0–15 複習",
+"位值與辨認數字符號",
+"位值與簡單的兩位數加減",
+"超過 10 的加法（湊十法）",
+"數字 16 及其性質（平方數、2 的次方）",
+"平方數 1、4、9、16",
+"數字 17 = 10+7",
+"數字 18 與其因數",
+"因數",
+"數字 19、質數／「差一個」",
+"數字 20 = 兩個十或十個二",
+"16–20 複習",
+"11–20 複習（依位值）",
+"數到 20、跳著數、預告 21",
+"16–20 隱藏數字複習",
+"乘法與乘號",
+"12 以內的乘法",
+"除法／平分",
+"有餘數的除法",
+"除法為乘法的逆運算與除號",
+"探索 20 以上的數（21、22、23）",
+"依規律推出 25",
+"數字 30、40、50",
+"10/20/30/40/50 為 1–5 的十倍",
+"數字 50 與每五個數一次",
+"數字 60、70、80、90",
+"數到 100",
+"數字 100 及其性質、每十個數一次",
+"更大的數（1000、10000、100000、1000000）",
+"第 1–4 季複習",
+"比較數字大小與數線",
+"書寫數字符號 0–9",
+"湊成 6、7、8、9、10 的數的組成",
+"不用數就看出數量",
+"1 的乘法表",
+"湊成 20 的數的組成",
+"湊十法",
+"每兩個數一次（到 20）",
+"2 的乘法表",
+"奇偶數、其加法、平方數為連續奇數之和",
+"用試除法推出 23 與 24",
+"12、18、20、24 的因數",
+"因數與（間接的）質數",
+"數字 26 與數的組隊",
+"數字 27 與 28、形數數列、初探立方數",
+"立方數 8 與 27，並簡介其他立體圖形",
+"數的性質、數字 29（引入「質數」一詞）",
+"3 的倍數（到 30）",
+"3 的乘法表",
+"如何推算出數字",
+"數字 32、2 的次方、加倍／減半",
+"三角形數與平方數，36 兩者皆是",
+"解謎（鑲嵌）",
+"4 的乘法表",
+"5 的乘法表",
+"三角形數、一位數加到兩位數",
+"更大的平方數（49、64、81）、初探二進位、有洞的正方形",
+"10 的乘法表",
+"提問；分數、負數等",
+"第 1–5 季複習",
+"解謎（抽象推理）",
+"數字加倍",
+"判讀指針時鐘",
+"和的和（四面體數）",
+"Numberblocks × Alphablocks 跨界合作",
+"Numberblocks × Alphablocks 跨界合作",
+"Numberblocks × Alphablocks 跨界合作",
+"Numberblocks × Alphablocks 跨界合作",
+"有無顏色輔助下辨認數量",
+"在數線上跳著數",
+"基礎機率",
+"骨牌與表達數值的不同方式",
+"用十格框辨認數量",
+"平面圖形複習",
+"立體圖形與其展開圖",
+"長方體、柱體與立體的維度",
+"依循指示方向",
+"判讀地圖",
+"金錢與等值",
+"測量與比較",
+"重量與重量換算",
+"Rekenrek 算珠",
+"辨認規律與數列",
+"完整 5×5 乘法表、乘法交換律",
+"4 的倍數（到 40）",
+"5 的倍數（到 50）",
+"數字 42 (6×7) 與 48 (6×8)",
+"6 的倍數（到 60）",
+"6 的乘法表",
+"數字 54 (6×9) 與 56 (7×8)",
+"數字 63 (7×9) 與 7 的倍數（到 70）",
+"7 的乘法表",
+"8 的倍數",
+"8 的乘法表",
+"數字 72 (8×9) 與 80 (8×10)",
+"9 的倍數與 9 的乘法表手指技巧",
+"9 的乘法表與 9x = 10x − x",
+"完整 10×10 乘法表",
+"判讀整點與半點",
+"周長",
+"用特定形狀求面積",
+"以直觀辨認計算長方形面積",
+"容量",
+"加法交換律",
+"奇數的性質",
+"與 5 有關的加法",
+"分解數字 6–10",
+"6–10 的部分—部分—整體",
+"加倍與減半複習",
+"用「五加零頭」法加倍、對稱",
+"以湊十法做加法",
+"以湊十法或十的補數做減法",
+"用 rekenrek 算珠做兩個一位數相加、計數記號",
+"依類別分類物品",
+"計數記號、資料蒐集",
+"象形圖、取樣資料",
+"投票、判讀投票／圖表結果",
+"長條圖",
+"湊成整體",
+"把東西分成相等的份；比例",
+"分數概念與如何組成一個整體",
+"深入分數、分數記法",
+"用單位分數做除法 (n × 1/x = N)",
+"個位／十位的運算、湊成 5 與 50 的數的組成",
+"從非 10 的倍數減去 10",
+"100 的數的組成與因數",
+"位值與多位數運算",
+"因數複習、無限的概念",
+];
+
+const EPISODES = RAW.map((r, i) => ({
+  sortNo: r[0], displayNo: r[1], seriesLabel: r[2], ep: r[3],
+  level: r[4], song: r[5], figured: r[6], title: r[7],
+  teaches: { en: r[8], zh: TEACHES_ZH[i] },
+  seriesGroup: r[2].replace(/[ab]$/, ""),
+  levelSort: r[4] === null ? 99 : r[4],
+}));
+
+let lang = "en";
+const I18N = {
+  en: {
+    title: "Numberblocks Episode List",
+    subtitle: '184 main episodes (188 incl. crossovers) &middot; filter &amp; sort by series / level &middot; Source: <a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    fSeries: "Series", fLevel: "Level", fMarks: "Marks",
+    all: "All", special: "No level", song: "♫ Has song", fig: "𝔽 figured-out",
+    searchPh: "🔍 Search title or teaching topic…",
+    reset: "Clear filters",
+    thNo: "No.", thSeries: "Series", thEp: "Ep.", thTitle: "Title", thLvl: "Lvl.", thTeaches: "Teaches",
+    empty: "No episodes match the filters.",
+    langBtn: "中文",
+    count: (n, t) => "Showing " + n + " / " + t,
+    legend: '<b style="color:#ff5252">▶</b> Click to search this episode on YouTube as &ldquo;numberblocks S{season} E{ep}&rdquo; (specials / crossovers searched by title) &middot;<br>' +
+      '<b>♫</b> has a song (<b>♫×2 / ♫×4</b> = multiple) &middot; <b>𝔽</b> a Numberblock is figured-out for the first time &middot; ' +
+      'Level colours follow the official curriculum (1 red · 2 orange · 3 yellow · 4 green · 5 blue; specials have no level).<br>' +
+      'From Series 6 on, numbers show as &ldquo;without crossover (with crossover)&rdquo;, since BBC iPlayer treats crossovers as a separate programme.',
+  },
+  zh: {
+    title: "Numberblocks 各集列表",
+    subtitle: '184 集正篇（含 crossover 共 188 集）&middot; 可依季 / Level 篩選與排序 &middot; 資料來源：<a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
+    fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks",
+    all: "全部", special: "特別篇", song: "♫ 含歌曲", fig: "𝔽 figured-out",
+    searchPh: "🔍 搜尋標題或教學主題…",
+    reset: "清除篩選",
+    thNo: "No.", thSeries: "季", thEp: "Ep.", thTitle: "標題", thLvl: "Lvl.", thTeaches: "教學主題",
+    empty: "沒有符合條件的集數。",
+    langBtn: "EN",
+    count: (n, t) => "顯示 " + n + " / " + t + " 集",
+    legend: '<b style="color:#ff5252">▶</b> 點擊在 YouTube 以「numberblocks S季 E集」搜尋該集（特別篇／crossover 以標題搜尋）　·<br>' +
+      '<b>♫</b> 含歌曲（<b>♫×2 / ♫×4</b> 為多首）　·　<b>𝔽</b> 該集有 Numberblock 被「figured-out」首次成形　· ' +
+      'Level 顏色對應官方課程等級（1 紅・2 橙・3 黃・4 綠・5 藍；特別篇無 Level）。<br>' +
+      'Series 6 起集數以「不含 crossover ／(含 crossover)」並列，因 BBC iPlayer 將 crossover 視為獨立節目。',
+  },
+};
+
+const SERIES_COLOR = {
+  "Series 1": "#e53935", "Series 2": "#fb8c00", "Series 3": "#f9a825",
+  "Series 4": "#43a047", "Series 5": "#039be5", "Series 6": "#8e24aa",
+  "Series 7": "#ab47bc", "Series 8": "#ec407a",
+  "Specials": "#90a4ae", "Crossover": "#66bb6a",
+};
+
+const SERIES_ORDER = ["Series 1","Series 2","Series 3","Series 4","Series 5",
+  "Specials","Crossover","Series 6","Series 7","Series 8"];
+
+const state = { series: "all", level: "all", song: false, fig: false, search: "",
+  sortKey: "sortNo", sortDir: 1 };
+
+// Build series chips
+const seriesChips = document.getElementById("seriesChips");
+function makeChip(text, kind, value, extraClass) {
+  const el = document.createElement("span");
+  el.className = "chip" + (extraClass ? " " + extraClass : "");
+  el.dataset.kind = kind; el.dataset.value = value; el.textContent = text;
+  return el;
+}
+const allSeriesChip = makeChip("", "series", "all", "active");
+allSeriesChip.dataset.i18n = "all";
+seriesChips.appendChild(allSeriesChip);
+SERIES_ORDER.forEach(s => seriesChips.appendChild(makeChip(s.replace("Series ", "S"), "series", s)));
+
+const levelChips = document.getElementById("levelChips");
+const allLevelChip = makeChip("", "level", "all", "active");
+allLevelChip.dataset.i18n = "all";
+levelChips.appendChild(allLevelChip);
+[1,2,3,4,5].forEach(l => levelChips.appendChild(makeChip("Level " + l, "level", String(l), "lv" + l)));
+const specialLevelChip = makeChip("", "level", "x", "lvx");
+specialLevelChip.dataset.i18n = "special";
+levelChips.appendChild(specialLevelChip);
+
+// Chip click handlers
+document.querySelectorAll(".chips").forEach(group => {
+  group.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    if (chip.classList.contains("toggle")) {
+      chip.classList.toggle("active");
+      state[chip.dataset.toggle] = chip.classList.contains("active");
+    } else {
+      const kind = chip.dataset.kind;
+      group.querySelectorAll('.chip[data-kind="' + kind + '"]').forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      state[kind] = chip.dataset.value;
+    }
+    render();
+  });
+});
+
+document.getElementById("search").addEventListener("input", e => {
+  state.search = e.target.value.toLowerCase().trim();
+  render();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  state.series = "all"; state.level = "all"; state.song = false;
+  state.fig = false; state.search = "";
+  document.getElementById("search").value = "";
+  document.querySelectorAll(".chip.toggle").forEach(c => c.classList.remove("active"));
+  document.querySelectorAll('.chip[data-kind="series"]').forEach(c =>
+    c.classList.toggle("active", c.dataset.value === "all"));
+  document.querySelectorAll('.chip[data-kind="level"]').forEach(c =>
+    c.classList.toggle("active", c.dataset.value === "all"));
+  render();
+});
+
+// Sorting
+document.querySelectorAll("thead th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.sort;
+    if (state.sortKey === key) state.sortDir *= -1;
+    else { state.sortKey = key; state.sortDir = 1; }
+    render();
+  });
+});
+
+function songMark(n) { return n === 0 ? "" : (n === 1 ? "♫" : "♫×" + n); }
+
+function render() {
+  let rows = EPISODES.filter(e => {
+    if (state.series !== "all" && e.seriesGroup !== state.series) return false;
+    if (state.level !== "all") {
+      if (state.level === "x") { if (e.level !== null) return false; }
+      else if (String(e.level) !== state.level) return false;
+    }
+    if (state.song && e.song === 0) return false;
+    if (state.fig && e.figured === 0) return false;
+    if (state.search) {
+      const hay = (e.title + " " + e.teaches).toLowerCase();
+      if (!hay.includes(state.search)) return false;
+    }
+    return true;
+  });
+
+  const key = state.sortKey, dir = state.sortDir;
+  rows.sort((a, b) => {
+    let va = a[key], vb = b[key];
+    if (key === "teaches") { va = a.teaches[lang]; vb = b.teaches[lang]; }
+    if (typeof va === "string") return va.localeCompare(vb) * dir;
+    return (va - vb) * dir;
+  });
+
+  // Update sort indicators
+  document.querySelectorAll("thead th").forEach(th => {
+    const arrow = th.querySelector(".arrow");
+    if (th.dataset.sort === key) {
+      th.classList.add("sorted");
+      arrow.textContent = dir === 1 ? "▲" : "▼";
+    } else {
+      th.classList.remove("sorted");
+      arrow.textContent = "⇅";
+    }
+  });
+
+  const tbody = document.getElementById("tbody");
+  tbody.textContent = "";
+  const frag = document.createDocumentFragment();
+
+  rows.forEach(e => {
+    const tr = document.createElement("tr");
+
+    const tdNo = document.createElement("td");
+    tdNo.className = "num"; tdNo.textContent = e.displayNo;
+    tr.appendChild(tdNo);
+
+    const tdSeries = document.createElement("td");
+    const tag = document.createElement("span");
+    tag.className = "series-tag";
+    tag.style.background = SERIES_COLOR[e.seriesGroup] || "#607d8b";
+    tag.textContent = e.seriesLabel;
+    tdSeries.appendChild(tag);
+    tr.appendChild(tdSeries);
+
+    const tdEp = document.createElement("td");
+    tdEp.className = "num"; tdEp.textContent = e.ep;
+    tr.appendChild(tdEp);
+
+    const tdTitle = document.createElement("td");
+    tdTitle.className = "title-cell";
+    const playBtn = document.createElement("button");
+    playBtn.className = "play-btn";
+    playBtn.setAttribute("aria-label", "play");
+    const seriesNum = e.seriesGroup.match(/\d+/);
+    const query = seriesNum
+      ? "numberblocks S" + seriesNum[0] + " E" + e.ep
+      : "numberblocks " + e.title;
+    playBtn.title = (lang === "zh" ? "在 YouTube 搜尋：" : "Search on YouTube: ") + query;
+    playBtn.addEventListener("click", () => {
+      window.open("https://www.youtube.com/results?search_query=" +
+        encodeURIComponent(query), "_blank", "noopener");
+    });
+    tdTitle.appendChild(playBtn);
+    tdTitle.appendChild(document.createTextNode(e.title));
+    if (e.song) {
+      const s = document.createElement("span");
+      s.className = "mark song"; s.textContent = songMark(e.song);
+      tdTitle.appendChild(s);
+    }
+    if (e.figured) {
+      const f = document.createElement("span");
+      f.className = "mark fig"; f.textContent = "𝔽";
+      tdTitle.appendChild(f);
+    }
+    tr.appendChild(tdTitle);
+
+    const tdLv = document.createElement("td");
+    const badge = document.createElement("span");
+    if (e.level === null) { badge.className = "lv-badge lvx"; badge.textContent = "—"; }
+    else {
+      badge.className = "lv-badge lv" + e.level;
+      badge.style.background = getComputedStyle(document.documentElement)
+        .getPropertyValue("--lv" + e.level).trim();
+      badge.textContent = e.level;
+    }
+    tdLv.appendChild(badge);
+    tr.appendChild(tdLv);
+
+    const tdTeach = document.createElement("td");
+    tdTeach.className = "teaches"; tdTeach.textContent = e.teaches[lang];
+    tr.appendChild(tdTeach);
+
+    frag.appendChild(tr);
+  });
+
+  tbody.appendChild(frag);
+  const emptyEl = document.getElementById("empty");
+  emptyEl.textContent = I18N[lang].empty;
+  emptyEl.style.display = rows.length ? "none" : "block";
+  document.getElementById("count").textContent = I18N[lang].count(rows.length, EPISODES.length);
+}
+
+function applyLang() {
+  const t = I18N[lang];
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t[el.dataset.i18nHtml]; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t[el.dataset.i18nPh]; });
+  document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
+  render();
+}
+
+document.getElementById("langBtn").addEventListener("click", () => {
+  lang = lang === "en" ? "zh" : "en";
+  applyLang();
+});
+
+applyLang();
+</script>
+</body>
+</html>
