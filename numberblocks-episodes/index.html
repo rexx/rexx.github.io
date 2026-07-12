@@ -92,10 +92,9 @@
   .chip.toggle.active { background: #6d28d9; }
   .chip.wf-watched.active { background: #43a047; }
   .chip.wf-unwatched.active { background: #607d8b; }
-  .toolbar {
-    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-    justify-content: space-between;
-  }
+  .search-row { display: flex; gap: 8px; align-items: center; }
+  .filter-actions { margin-top: 14px; }
+  .count-bar { margin: 2px 4px 12px; }
   .search {
     flex: 1 1 240px; min-width: 200px;
     border: 1.5px solid var(--line); border-radius: 10px;
@@ -103,13 +102,6 @@
     background: var(--chip-bg); color: var(--ink);
   }
   .search:focus { outline: none; border-color: #039be5; }
-  .search-toggle {
-    flex: 0 0 auto; line-height: 1; cursor: pointer;
-    border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
-    border-radius: 10px; padding: 9px 12px; font-size: .95rem;
-  }
-  .search-toggle:hover { background: #232c3e; }
-  .search-toggle.active { border-color: #039be5; }
   .count { font-size: .84rem; color: var(--muted); white-space: nowrap; }
   .btn-reset {
     border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
@@ -214,17 +206,19 @@
         <div class="filter-label" data-i18n="fWatch">Watched</div>
         <div class="chips" id="watchChips"></div>
       </div>
+      <div class="filter-group">
+        <div class="filter-label" data-i18n="fSearch">Search</div>
+        <div class="search-row">
+          <input type="text" class="search" id="search" data-i18n-ph="searchPh" placeholder="Search title or teaching topic…">
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-reset" id="reset" data-i18n="reset">Clear filters</button>
+      </div>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="toolbar">
-      <button class="search-toggle" id="searchToggle" aria-label="search" aria-expanded="false">🔍</button>
-      <input type="text" class="search" id="search" data-i18n-ph="searchPh" placeholder="Search title or teaching topic…" hidden>
-      <span class="count" id="count"></span>
-      <button class="btn-reset" id="reset" data-i18n="reset">Clear filters</button>
-    </div>
-  </div>
+  <div class="count-bar"><span class="count" id="count"></span></div>
 
   <div class="table-scroll">
     <table>
@@ -650,7 +644,7 @@ const I18N = {
     title: "Numberblocks Episode List",
     subtitle: '188 episodes (incl. Alphablocks crossovers) &middot; filter &amp; sort by series / level &middot; Source: <a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
     filters: "Filters",
-    fSeries: "Series", fLevel: "Level", fMarks: "Marks", fWatch: "Watched",
+    fSeries: "Series", fLevel: "Level", fMarks: "Marks", fWatch: "Watched", fSearch: "Search",
     all: "All", special: "No level", song: "♫ Has song", fig: "𝔽 figured-out",
     wWatched: "✓ Seen", wUnwatched: "Not seen",
     searchPh: "🔍 Search title or teaching topic…",
@@ -668,7 +662,7 @@ const I18N = {
     title: "Numberblocks 各集列表",
     subtitle: '共 188 集（含 crossover）&middot; 可依季 / Level 篩選與排序 &middot; 資料來源：<a href="https://numberblocks.fandom.com/wiki/List_of_Numberblocks_episodes" target="_blank" rel="noopener">Numberblocks Wiki</a>',
     filters: "篩選器 Filters",
-    fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks", fWatch: "觀看狀態 Watched",
+    fSeries: "季 Series", fLevel: "課程等級 Level", fMarks: "標記 Marks", fWatch: "觀看狀態 Watched", fSearch: "搜尋 Search",
     all: "全部", special: "特別篇", song: "♫ 含歌曲", fig: "𝔽 figured-out",
     wWatched: "✓ 看過", wUnwatched: "未看",
     searchPh: "🔍 搜尋標題或教學主題…",
@@ -762,18 +756,6 @@ document.querySelectorAll(".chips").forEach(group => {
 document.getElementById("search").addEventListener("input", e => {
   state.search = e.target.value.toLowerCase().trim();
   render();
-});
-
-// Collapsible search box, collapsed by default
-const searchToggle = document.getElementById("searchToggle");
-const searchInput = document.getElementById("search");
-searchToggle.addEventListener("click", () => {
-  const show = searchInput.hidden;
-  searchInput.hidden = !show;
-  searchToggle.classList.toggle("active", show);
-  searchToggle.setAttribute("aria-expanded", String(show));
-  if (show) searchInput.focus();
-  else if (searchInput.value) { searchInput.value = ""; state.search = ""; render(); }
 });
 
 document.getElementById("reset").addEventListener("click", () => {
