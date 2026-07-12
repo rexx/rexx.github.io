@@ -103,6 +103,13 @@
     background: var(--chip-bg); color: var(--ink);
   }
   .search:focus { outline: none; border-color: #039be5; }
+  .search-toggle {
+    flex: 0 0 auto; line-height: 1; cursor: pointer;
+    border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
+    border-radius: 10px; padding: 9px 12px; font-size: .95rem;
+  }
+  .search-toggle:hover { background: #232c3e; }
+  .search-toggle.active { border-color: #039be5; }
   .count { font-size: .84rem; color: var(--muted); white-space: nowrap; }
   .btn-reset {
     border: 1.5px solid var(--line); background: var(--chip-bg); color: var(--ink);
@@ -212,7 +219,8 @@
 
   <div class="panel">
     <div class="toolbar">
-      <input type="text" class="search" id="search" data-i18n-ph="searchPh" placeholder="Search title or teaching topic…">
+      <button class="search-toggle" id="searchToggle" aria-label="search" aria-expanded="false">🔍</button>
+      <input type="text" class="search" id="search" data-i18n-ph="searchPh" placeholder="Search title or teaching topic…" hidden>
       <span class="count" id="count"></span>
       <button class="btn-reset" id="reset" data-i18n="reset">Clear filters</button>
     </div>
@@ -754,6 +762,18 @@ document.querySelectorAll(".chips").forEach(group => {
 document.getElementById("search").addEventListener("input", e => {
   state.search = e.target.value.toLowerCase().trim();
   render();
+});
+
+// Collapsible search box, collapsed by default
+const searchToggle = document.getElementById("searchToggle");
+const searchInput = document.getElementById("search");
+searchToggle.addEventListener("click", () => {
+  const show = searchInput.hidden;
+  searchInput.hidden = !show;
+  searchToggle.classList.toggle("active", show);
+  searchToggle.setAttribute("aria-expanded", String(show));
+  if (show) searchInput.focus();
+  else if (searchInput.value) { searchInput.value = ""; state.search = ""; render(); }
 });
 
 document.getElementById("reset").addEventListener("click", () => {
