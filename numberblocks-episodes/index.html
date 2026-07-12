@@ -627,13 +627,21 @@ const TEACHES_ZH = [
 "因數複習、無限的概念",
 ];
 
-const EPISODES = RAW.map((r, i) => ({
-  sortNo: r[0], displayNo: String(i + 1), seriesLabel: r[2], ep: r[3],
-  level: r[4], song: r[5], figured: r[6], title: r[7],
-  teaches: { en: r[8], zh: TEACHES_ZH[i] },
-  seriesGroup: r[2].replace(/[ab]$/, ""),
-  levelSort: r[4] === null ? 99 : r[4],
-}));
+// ytEp: episode's position within its whole series group (e.g. Series 3 = 3a + 3b),
+// so a/b sub-series map to continuous within-series numbers for the YouTube search.
+const seriesEpSeq = {};
+const EPISODES = RAW.map((r, i) => {
+  const seriesGroup = r[2].replace(/[ab]$/, "");
+  seriesEpSeq[seriesGroup] = (seriesEpSeq[seriesGroup] || 0) + 1;
+  return {
+    sortNo: r[0], displayNo: String(i + 1), seriesLabel: r[2], ep: r[3],
+    level: r[4], song: r[5], figured: r[6], title: r[7],
+    teaches: { en: r[8], zh: TEACHES_ZH[i] },
+    seriesGroup,
+    ytEp: seriesEpSeq[seriesGroup],
+    levelSort: r[4] === null ? 99 : r[4],
+  };
+});
 
 const LANG_KEY = "nb_lang";
 let lang = "en";
@@ -870,7 +878,7 @@ function render() {
     playBtn.setAttribute("aria-label", "play");
     const seriesNum = e.seriesGroup.match(/\d+/);
     const query = seriesNum
-      ? "numberblocks S" + seriesNum[0] + " E" + e.ep
+      ? "numberblocks S" + seriesNum[0] + " E" + e.ytEp
       : "numberblocks " + e.title;
     playBtn.title = (lang === "zh" ? "在 YouTube 搜尋：" : "Search on YouTube: ") + query;
     playBtn.addEventListener("click", () => {
