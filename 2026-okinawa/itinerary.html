@@ -221,6 +221,13 @@ label.todo input:checked + span{text-decoration:line-through;color:var(--muted)}
 .urg.week{background:var(--warnBg);color:var(--warnFg);border:1px solid var(--warnBd)}
 .urg.ok{background:var(--doneBg);color:var(--doneFg);border:1px solid var(--doneBd)}
 
+/* packing list: qty badge + secondary note inside a .todo row */
+label.todo .q{
+  font-family:var(--num);font-size:11px;color:var(--muted);
+  border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin-left:7px;white-space:nowrap
+}
+label.todo .n{display:block;font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6}
+
 /* ---------- bottom nav ---------- */
 nav.tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
@@ -261,12 +268,14 @@ nav.tabs button[aria-selected="true"]{color:var(--sea);font-weight:700}
   <section id="view-days"></section>
   <section id="view-meals" class="hidden"></section>
   <section id="view-todo" class="hidden"></section>
+  <section id="view-pack" class="hidden"></section>
 </main>
 
 <nav class="tabs">
   <button data-view="days" aria-selected="true"><span class="ic">🗓</span>行程</button>
   <button data-view="meals"><span class="ic">🍽</span>用餐</button>
   <button data-view="todo"><span class="ic">✔︎</span>待辦</button>
+  <button data-view="pack"><span class="ic">🧳</span>行李</button>
 </nav>
 
 <script>
@@ -451,6 +460,74 @@ const TODO = [
 
 const NOBOOK = '部瀨名海中公園、瀨長島、瀨底島、古宇利島、海中道路、リカリカワルミ、蝦蝦飯';
 
+const PACK = [
+ {h:'隨身行李 · 絕對不可託運', items:[
+   {t:'護照（效期已確認）'},
+   {t:'台灣駕照 ＋ <b>日文譯本正本</b>', n:'⚠️ 沒譯本＝不能取車，最重要的一張紙'},
+   {t:'NIPPON 租車預約確認信', n:'<b>截圖存離線</b>，含預約編號。營業所 〒901-0225 豊見城市豊崎 3-95｜TEL 050-1712-2419｜MapCode 232 543 225*67'},
+   {t:'飯店訂房確認', q:'×3', n:'旭橋／名護大宮／屋嘉——<b>日文地址截圖</b>，給計程車司機看'},
+   {t:'美麗海水族館電子票', q:'7/31'},
+   {t:'燒肉神社訂位確認', q:'8/3 17:30'},
+   {t:'旅平險／旅遊不便險保單截圖'},
+   {t:'<b>現金 日幣 6–8 萬</b>', n:'暖暮券売機、海中公園門票、停車場、小店多收現金'},
+   {t:'信用卡', q:'×2', n:'兩人分開放'},
+   {t:'<b>行動電源</b> ＋ 充電線', n:'法規規定必須隨身，不能託運'},
+   {t:'小孩水壺、餅乾、濕紙巾'},
+   {t:'常備藥包', n:'<b>暈車藥</b>（本部半島／縣道 88 山路）、退燒藥、腸胃藥、蚊蟲藥膏、OK 繃'}
+ ]},
+ {h:'衣物', items:[
+   {t:'排汗短袖／短褲', q:'每人 5 套', n:'純棉濕黏，機能布優先'},
+   {t:'薄長袖外套', q:'每人 1', n:'冷氣車廂、水族館室內很冷'},
+   {t:'泳衣', q:'每人 1–2 套', n:'瀨底 3 小時＋屋嘉＋海中公園'},
+   {t:'<b>兒童長袖水母衣</b>', q:'1', n:'⚠️ 屋嘉無防護網、8 月箱水母季，這是安全裝備'},
+   {t:'拖鞋／海灘鞋', q:'每人 1', n:'溯溪鞋型最佳，礁岩會割腳'},
+   {t:'好走的鞋', q:'每人 1', n:'備瀨並木、萬座毛木棧道'},
+   {t:'有帽簷的帽子', q:'每人 1'},
+   {t:'睡衣', q:'每人 2'},
+   {t:'內衣褲、襪子', q:'每人 5 天份'}
+ ]},
+ {h:'防曬防熱 · 本趟最重要', items:[
+   {t:'高係數防曬乳', q:'大人 1 支'},
+   {t:'<b>兒童物理性防曬乳</b>', q:'單獨 1 支'},
+   {t:'曬後蘆薈凝膠'},
+   {t:'兒童太陽眼鏡'},
+   {t:'攜帶式小風扇', q:'×2', n:'充電式，可掛脖'},
+   {t:'涼感巾', q:'×3'},
+   {t:'<b>電解質粉包／寶礦力粉</b>', n:'比瓶裝划算，飯店裝水就能泡'},
+   {t:'防蚊液', n:'BIOS 之丘、備瀨並木、今歸仁都是樹林區'}
+ ]},
+ {h:'戲水裝備', items:[
+   {t:'大浴巾／速乾巾', q:'×3'},
+   {t:'<b>防水袋／夾鏈袋</b>', n:'濕泳衣、手機分開裝'},
+   {t:'海灘墊或野餐墊'},
+   {t:'泳鏡', q:'小孩'}
+ ], note:'🛒 <s>挖沙玩具</s> → 7/30 名護ドンキ現買，比台灣便宜。'},
+ {h:'自駕用品 · 7/30–8/4', items:[
+   {t:'<b>手機車架</b>', n:'吸盤式，租車不一定附'},
+   {t:'<b>雙孔車充</b>', n:'導航很吃電'},
+   {t:'垃圾袋數個', n:'日本車上沒垃圾桶'},
+   {t:'小毯子', n:'小孩車上睡覺，冷氣直吹'},
+   {t:'手機離線地圖已下載', n:'沖繩本島區域包'},
+   {t:'eSIM ✅ 已購買', n:'<b>確認啟用日設定 7/29</b>'}
+ ]},
+ {h:'其他', items:[
+   {t:'摺疊購物袋', q:'×2'},
+   {t:'<b>摺疊行李袋或預留行李空間</b>', n:'⚠️ ドンキ（7/30）＋ iias（8/4）兩次大採買，回程必爆'},
+   {t:'輕便雨衣', q:'×3', n:'戶外景點比傘好用；另備折傘 ×1'},
+   {t:'盥洗用品', n:'飯店多半有，帶小孩專用的即可'},
+   {t:'免洗內褲／輕便換洗', n:'減少行李'}
+ ], note:'❌ <b>不需要</b>轉接頭：日本 A 型插座與台灣相同，100V 相容。'},
+ {h:'出發前一天最後檢查 · 7/28', items:[
+   {t:'駕照日文譯本<b>放進隨身包</b>', n:'不是行李箱'},
+   {t:'eSIM 啟用日確認 7/29'},
+   {t:'手機截圖：租車確認信、三家飯店日文地址、水族館票'},
+   {t:'行動電源充飽、放隨身'},
+   {t:'現金換好、分兩處放'},
+   {t:'7/31 名護晚餐訂位完成'},
+   {t:'虎航線上報到', n:'起飛前 24 小時開放'}
+ ]}
+];
+
 /* ---------- render ---------- */
 const esc = s => s;
 function evHTML(e){
@@ -516,6 +593,24 @@ function todoHTML(){
   return h;
 }
 
+function packHTML(){
+  let h = `<div class="daytitle"><div class="eyebrow">PACKING</div><h2>行李清單</h2></div>`;
+  h += `<div class="note tip">2 大 1 小（6 歲）· 核心策略 <b>防曬防熱 &gt; 防雨</b><br>
+    天氣前提：無台風、晴天為主、局部雷陣雨；熱中症「危險」等級、紫外線指數 100。<br>
+    飯店有洗衣機，衣物帶 4–5 天份輪洗即可。消耗品可到當地補：ドンキ（7/30 名護）、iias 豐崎（8/4）。</div>`;
+  PACK.forEach((sec,si)=>{
+    h += `<div class="sechead">${sec.h}</div>`;
+    sec.items.forEach((it,i)=>{
+      const q = it.q ? `<span class="q">${it.q}</span>` : '';
+      const n = it.n ? `<span class="n">${it.n}</span>` : '';
+      h += `<label class="todo"><input type="checkbox" id="pack-${si}-${i}"><span>${it.t}${q}${n}</span></label>`;
+    });
+    if(sec.note) h += `<div class="note tip">${sec.note}</div>`;
+  });
+  h += `<div class="note tip" style="margin-top:14px">勾選只存在這台手機的瀏覽器裡，關掉分頁也會留著。</div>`;
+  return h;
+}
+
 /* ---------- state ---------- */
 const scroll = document.getElementById('dayscroll');
 const viewDays = document.getElementById('view-days');
@@ -569,9 +664,15 @@ function markNow(){
 selectDay(todayIdx >= 0 ? todayIdx : 0);
 
 /* bottom tabs */
-const views = {days:viewDays, meals:document.getElementById('view-meals'), todo:document.getElementById('view-todo')};
+const views = {
+  days:viewDays,
+  meals:document.getElementById('view-meals'),
+  todo:document.getElementById('view-todo'),
+  pack:document.getElementById('view-pack')
+};
 views.meals.innerHTML = mealsHTML();
 views.todo.innerHTML = todoHTML();
+views.pack.innerHTML = packHTML();
 document.querySelectorAll('nav.tabs button').forEach(btn=>{
   btn.onclick = ()=>{
     document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b===btn?'true':'false'));
@@ -605,7 +706,7 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
 try{
   const KEY='oki-todo';
   const saved = JSON.parse(localStorage.getItem(KEY)||'{}');
-  views.todo.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+  [views.todo, views.pack].flatMap(v=>[...v.querySelectorAll('input[type=checkbox]')]).forEach(cb=>{
     if(cb.id in saved) cb.checked = saved[cb.id];
     cb.addEventListener('change',()=>{
       saved[cb.id]=cb.checked;
