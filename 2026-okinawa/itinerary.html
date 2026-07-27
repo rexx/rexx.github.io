@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>沖繩 8 日</title>
+<meta name="theme-color" content="#FFFFFF">
+<script>(function(){var t='light';try{t=localStorage.getItem('oki-theme')||'light'}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== theme tokens ===== */
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:#F3FAFE; --paper:#FFFFFF; --ink:#1B4A68; --muted:#7A99AF; --line:#E2EFF8;
+  --sea:#1E9BE0; --hibiscus:#B78313; --goldSolid:#FFC53D; --onGold:#4A3400; --shikwasa:#C08F14;
+  --railMid:#BFE1F6; --optBd:#D9E8F3; --detail:#456781;
+  --chipSelBg:#1E9BE0; --chipSelFg:#FFFFFF;
+  --navBg:rgba(255,255,255,.92);
+  --warnBg:#FFF8E8; --warnBd:#FAE7BB; --warnFg:#8C6608;
+  --rainBg:#EFF8FE; --rainBd:#D6EAF9; --rainFg:#2E76A8;
+  --tipBg:#FFFBEE;  --tipBd:#F6EBCC;  --tipFg:#836416;
+  --actBg:#F0F9FE;  --actBd:#CFE9FA;  --actFg:#1585C8;
+  --telBg:#FFF8EA;  --telBd:#F8E6BB;  --telFg:#A0710B;
+  --doneBg:#ECF7FE; --doneBd:#D0E8F8; --doneFg:#1E85C4;
+  --stayBg:#FFF9EC; --stayBd:#F8EAC5; --stayFg:#9C760F;
+  --bookBg:#FEF5E1; --bookBd:#F5E3AF; --bookFg:#976D0B;
+  --shadow:0 8px 18px -14px rgba(30,120,180,.45);
+  --cardShadow:0 1px 3px rgba(30,110,170,.05);
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10293D; --paper:#183851; --ink:#EAF4FB; --muted:#9DBAD0; --line:#2B4E6B;
+  --sea:#6EC6F5; --hibiscus:#FFD277; --goldSolid:#FFC960; --onGold:#2B1E00; --shikwasa:#EFB84A;
+  --railMid:#356A92; --optBd:#3B5F7C; --detail:#CBDDEA;
+  --chipSelBg:#EAF4FB; --chipSelFg:#10293D;
+  --navBg:rgba(24,56,81,.95);
+  --warnBg:#372B16; --warnBd:#614A22; --warnFg:#F8CE7E;
+  --rainBg:#153348; --rainBd:#2D5570; --rainFg:#A9D5F0;
+  --tipBg:#332B18;  --tipBd:#574928;  --tipFg:#F0D693;
+  --actBg:#153448;  --actBd:#316087;  --actFg:#8AD2F8;
+  --telBg:#372B16;  --telBd:#614A22;  --telFg:#F8CD7D;
+  --doneBg:#16334A; --doneBd:#2F5C80; --doneFg:#93D1F5;
+  --stayBg:#372C17; --stayBd:#604B28; --stayFg:#F0CB86;
+  --bookBg:#382D18; --bookBd:#634F29; --bookFg:#F6CE85;
+  --shadow:0 10px 18px -14px rgba(0,0,0,.75);
+  --cardShadow:0 1px 3px rgba(0,0,0,.16);
+}
+:root{
+  --r:16px;
+  --num:"Oswald",-apple-system,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+*{-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+html,body{margin:0;padding:0}
+#bgLayer{position:fixed;inset:0;background:var(--bg);z-index:0;pointer-events:none}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:15px;
+  line-height:1.6;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  -webkit-text-size-adjust:100%;
+}
+
+/* ---------- header ---------- */
+header{
+  position:relative;z-index:1;
+  background:var(--paper);
+  padding:calc(14px + env(safe-area-inset-top)) 16px 12px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand h1{margin:0;font-size:19px;font-weight:600;letter-spacing:.07em}
+.brand .range{font-family:var(--num);font-size:13px;letter-spacing:.08em;color:var(--sea)}
+#themeToggle{
+  margin-left:auto;flex:none;border:1px solid var(--line);background:var(--bg);color:var(--muted);
+  border-radius:999px;padding:5px 11px;font-size:12px;font-family:var(--body);cursor:pointer;
+  display:flex;align-items:center;gap:5px;line-height:1
+}
+#themeToggle .ic{font-size:13px}
+.status{margin-top:6px;font-size:12.5px;color:var(--muted)}
+.status b{color:var(--hibiscus);font-weight:700}
+.status:empty{display:none}
+.baseline{margin-top:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.baseline::-webkit-scrollbar{display:none}
+.baseline span{
+  flex:none;font-size:11px;padding:3px 9px;border-radius:999px;background:var(--bg);
+  border:1px solid var(--line);color:var(--muted);white-space:nowrap
+}
+
+/* ---------- day chips ---------- */
+.dayscroll{
+  position:sticky;top:0;z-index:30;background:var(--paper);
+  padding:0 10px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--line);box-shadow:var(--shadow);
+}
+.dayscroll::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;border:1px solid var(--line);background:var(--paper);color:var(--muted);
+  border-radius:10px;padding:6px 10px 5px;font-family:var(--num);font-size:14px;
+  letter-spacing:.04em;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15;
+}
+.chip small{font-family:var(--body);font-size:9.5px;letter-spacing:0;opacity:.8}
+.chip[aria-selected="true"]{background:var(--chipSelBg);color:var(--chipSelFg);border-color:var(--chipSelBg);font-weight:600}
+.chip.today::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--goldSolid);margin-top:3px}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:1;padding:14px 12px 20px;max-width:640px;margin:0 auto}
+.daytitle{margin:2px 0 14px}
+.daytitle .eyebrow{
+  font-family:var(--num);font-size:12px;letter-spacing:.16em;color:var(--sea);text-transform:uppercase
+}
+.daytitle h2{margin:2px 0 0;font-size:18px;font-weight:600;letter-spacing:.01em}
+
+/* ---------- timeline ----------
+   rail: left 56, width 2  -> centre 57
+   dot : left -27 from a box that starts at 78 -> 51..63 -> centre 57  */
+.tl{position:relative;padding-left:78px}
+.tl::before{
+  content:"";position:absolute;left:56px;top:10px;bottom:14px;width:2px;
+  background:linear-gradient(180deg,var(--sea),var(--railMid) 70%,transparent);
+  border-radius:2px;
+}
+.ev{position:relative;margin-bottom:16px}
+.ev .t{
+  position:absolute;left:-78px;top:11px;width:44px;text-align:right;
+  font-family:var(--num);font-size:16px;font-weight:600;letter-spacing:.03em;color:var(--ink)
+}
+.ev::before{
+  content:"";position:absolute;left:-27px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--sea)
+}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;box-shadow:var(--cardShadow)}
+.ev.opt::before{border-color:var(--optBd)}
+.ev.opt .card{background:transparent;border-style:dashed;border-color:var(--optBd)}
+.ev.key::before{background:var(--goldSolid);border-color:var(--goldSolid);box-shadow:0 0 0 4px color-mix(in srgb,var(--goldSolid) 22%,transparent)}
+.card h3{margin:0;font-size:15.5px;font-weight:600;line-height:1.5}
+.card .sub{margin-top:3px;font-size:12.5px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.tag{
+  font-size:11px;padding:2px 7px;border-radius:6px;background:var(--bg);
+  color:var(--muted);border:1px solid var(--line);white-space:nowrap
+}
+.tag.drive::before{content:"🚗 "}
+.tag.walk::before{content:"🚶 "}
+.tag.bus::before{content:"🚌 "}
+.tag.rail::before{content:"🚝 "}
+.tag.stay{background:var(--stayBg);border-color:var(--stayBd);color:var(--stayFg)}
+.tag.book{background:var(--bookBg);border-color:var(--bookBd);color:var(--bookFg)}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.act{
+  font-size:12px;text-decoration:none;color:var(--actFg);border:1px solid var(--actBd);
+  background:var(--actBg);padding:4px 10px;border-radius:8px;font-weight:600
+}
+.act.tel{color:var(--telFg);border-color:var(--telBd);background:var(--telBg)}
+details.more{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+details.more summary{font-size:12px;color:var(--sea);cursor:pointer;list-style:none;font-weight:600}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"▸ ";display:inline-block}
+details.more[open] summary::before{content:"▾ "}
+details.more .body{font-size:13px;color:var(--detail);margin-top:6px}
+details.more .body p{margin:0 0 6px}
+details.more .body p:last-child{margin-bottom:0}
+
+/* now marker */
+.nowline{position:relative;height:0;margin:2px 0 14px}
+.nowline::before{
+  content:"";position:absolute;left:-27px;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--goldSolid),transparent)
+}
+.nowline span{
+  position:absolute;left:-78px;top:-9px;font-family:var(--num);font-size:11px;
+  background:var(--goldSolid);color:var(--onGold);padding:1px 6px;border-radius:999px;letter-spacing:.06em;font-weight:600
+}
+
+/* ---------- notes ---------- */
+.note{border-radius:var(--r);padding:10px 12px;font-size:13px;margin-top:10px;line-height:1.65}
+.note.warn{background:var(--warnBg);border:1px solid var(--warnBd);color:var(--warnFg)}
+.note.rain{background:var(--rainBg);border:1px solid var(--rainBd);color:var(--rainFg)}
+.note.tip{background:var(--tipBg);border:1px solid var(--tipBd);color:var(--tipFg)}
+.note b{font-weight:700}
+.note ul{margin:4px 0 0;padding-left:18px}
+.note li{margin-bottom:3px}
+.sechead{
+  font-family:var(--num);font-size:12px;letter-spacing:.16em;color:var(--sea);
+  margin:22px 0 8px;text-transform:uppercase
+}
+
+/* ---------- rows / lists ---------- */
+.row{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;
+  box-shadow:var(--cardShadow)
+}
+.row .k{font-family:var(--num);font-size:13px;color:var(--muted);flex:none;width:52px;padding-top:2px}
+.row .v{flex:1}
+.row .v .m{font-size:15px;font-weight:600}
+.row .v .s{font-size:12.5px;color:var(--muted)}
+.state{font-size:11px;padding:2px 7px;border-radius:6px;flex:none;align-self:center}
+.state.done{background:var(--doneBg);color:var(--doneFg);border:1px solid var(--doneBd)}
+.state.open{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.state.pick{background:var(--tipBg);color:var(--tipFg);border:1px solid var(--tipBd)}
+
+label.todo{
+  display:flex;gap:10px;align-items:flex-start;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;cursor:pointer;box-shadow:var(--cardShadow)
+}
+label.todo input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--sea);flex:none}
+label.todo span{flex:1;font-size:14px}
+label.todo input:checked + span{text-decoration:line-through;color:var(--muted)}
+.urg{
+  display:inline-block;font-family:var(--num);font-size:11px;letter-spacing:.14em;
+  padding:2px 8px;border-radius:6px;margin:16px 0 8px
+}
+.urg.now{background:var(--goldSolid);color:var(--onGold);font-weight:600}
+.urg.week{background:var(--warnBg);color:var(--warnFg);border:1px solid var(--warnBd)}
+.urg.ok{background:var(--doneBg);color:var(--doneFg);border:1px solid var(--doneBd)}
+
+/* ---------- bottom nav ---------- */
+nav.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
+  background:var(--navBg);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)
+}
+nav.tabs button{
+  flex:1;border:0;background:transparent;padding:9px 0 8px;font-family:var(--body);
+  font-size:11px;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:2px
+}
+nav.tabs button .ic{font-size:17px;line-height:1}
+nav.tabs button[aria-selected="true"]{color:var(--sea);font-weight:700}
+.hidden{display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="bgLayer"></div>
+<header>
+  <div class="brand">
+    <h1>沖繩 8 日</h1>
+    <span class="range">7/29 – 8/5</span>
+    <button id="themeToggle" type="button" aria-label="切換深色／淺色"><span class="ic">☾</span><span class="lbl">深色</span></button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="baseline">
+    <span>2 大 1 小</span>
+    <span>7/30 11:00 豐崎取車</span>
+    <span>8/4 11:00 還車</span>
+    <span>8/4 午後靠單軌</span>
+  </div>
+</header>
+
+<div class="dayscroll" id="dayscroll" role="tablist"></div>
+
+<main>
+  <section id="view-days"></section>
+  <section id="view-meals" class="hidden"></section>
+  <section id="view-todo" class="hidden"></section>
+</main>
+
+<nav class="tabs">
+  <button data-view="days" aria-selected="true"><span class="ic">🗓</span>行程</button>
+  <button data-view="meals"><span class="ic">🍽</span>用餐</button>
+  <button data-view="todo"><span class="ic">✔︎</span>待辦</button>
+</nav>
+
+<script>
+const MAP = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+
+const DAYS = [
+{
+  date:'2026-07-29', label:'7/29', wk:'三', eyebrow:'ARRIVAL', title:'抵達那霸',
+  events:[
+    {t:'20:50', name:'落地那霸機場', key:true},
+    {t:'21:30', name:'出關、領行李'},
+    {t:'21:45', name:'單軌 那霸空港 → 旭橋', tags:[['rail','約 12 分']],
+      detail:'末班單軌約 23:30。行李多、小孩累就直接搭計程車，約 15 分鐘。'},
+    {t:'22:00', name:'進那霸住宿休息', sub:'今晚不取車', tags:[['stay','那霸（旭橋）']]}
+  ]
+},
+{
+  date:'2026-07-30', label:'7/30', wk:'四', eyebrow:'DAY 1', title:'取車 → 港川 → 西海岸北上',
+  intro:'分頭進行：一人輕裝搭公車去豐崎取車，另一位大人＋小孩留在住宿整理行李。',
+  events:[
+    {t:'07:45', name:'早餐：オハコルテベーカリー', sub:'泉崎 1-4-10 2F，步行 5 分內',
+      map:'オハコルテベーカリー 那覇市泉崎', tel:'098-869-1830', tags:[['walk','步行']],
+      detail:'7:30–15:30（L.O. 15:00），幾乎無休。<b>沒有停車場</b>——這天早上還沒取車，剛好。招牌是檸檬糖霜法式吐司，有內用座位。'},
+    {t:'09:30', name:'退房，行李寄放櫃檯', sub:'家人留守'},
+    {t:'09:40', name:'那覇巴士總站 → 豊崎美らSUNビーチ前', sub:'55／56／88／98／256 任一班',
+      map:'那覇バスターミナル', tags:[['bus','約 40 分']],
+      detail:'多條路線合計約每 15–30 分一班，車資約 600 円上下，可付現或 IC 卡。'},
+    {t:'11:00', name:'取車', sub:'裝安全座椅、設定導航', key:true,
+      map:'沖縄県豊見城市豊崎 3-95', tags:[['walk','下車步行 2 分']],
+      detail:'豐崎營業所 〒901-0225 豊見城市豊崎 3-95｜MapCode <b>232 543 225*67</b>｜08:00 開門。取完車開回旭橋接人，約 25 分。'},
+    {t:'12:30', name:'港川外人住宅 ステイツサイドタウン', sub:'浦添．午餐＋逛店，停留 2.5 小時',
+      map:'港川外人住宅 ステイツサイドタウン', tags:[['drive','25 分']],
+      detail:'用冷氣小店躲過最熱的時段。'},
+    {t:'16:15', name:'萬座毛', sub:'木棧道平緩，停留 60 分',
+      map:'万座毛', tags:[['drive','60–70 分']],
+      detail:'這個時間光線好、風也涼了。'},
+    {t:'18:30', name:'晚餐：暖暮拉麵 名護店', sub:'名護市東江 5-10-36，58 號線旁',
+      map:'暖暮ラーメン 名護店', tel:'0980-43-5503', tags:[['drive','55 分'],['book','免預約']],
+      detail:'11:00–翌 02:00，幾乎無休。券売機點餐，可選麵粗細／硬度／辣度／湯濃淡。店小（吧台 8 席＋4 桌），尖峰要排隊，但營業到凌晨，逛完再吃也行。'},
+    {t:'19:30', name:'MEGA ドンキ 名護店', sub:'開到凌晨 2 點，慢慢逛', map:'MEGAドン・キホーテ 名護店', tags:[['drive','5 分']]},
+    {t:'21:30', name:'進名護住宿', tags:[['stay','名護'],['drive','5 分']]}
+  ],
+  plus:['21 世紀之森海邊 + 星巴克——離名護住宿只有 5 分鐘，7/31 晚餐後或 8/1 早上隨時能補',
+        'おんなの駅なかゆくい市場（恩納，萬座毛→名護途中，買水果小吃）'],
+  warns:['<b>港川各店公休日不一</b>（不少店週三／週四休），7/30 是週四，出發前先查想去的那幾家。',
+         '旭橋周邊路邊不好久停，回程前先傳訊息，讓家人帶行李在門口等。'],
+  rain:'港川多為獨立小店，撐傘可逛；萬座毛下雨改御菓子御殿恩納店，或直接提早到名護逛ドンキ。'
+},
+{
+  date:'2026-07-31', label:'7/31', wk:'五', eyebrow:'DAY 2', title:'美麗海水族館 + 本部半島北岸',
+  events:[
+    {t:'08:15', name:'名護出發'},
+    {t:'09:00', name:'美麗海水族館', sub:'開館衝，黑潮之海＋海豚劇場，停留 4 小時', key:true,
+      map:'沖縄美ら海水族館', tags:[['drive','45 分'],['book','門票已購']]},
+    {t:'13:00', name:'午餐（本部區域）', tags:[['drive','10 分'],['book','待定']]},
+    {t:'14:30', name:'備瀨福木並木', sub:'樹蔭下慢走，可租單車，1–1.5 小時',
+      map:'備瀬のフクギ並木', tags:[['drive','10 分']]},
+    {t:'16:00', name:'DRIVE IN リカリカワルミ', sub:'海景高台，正對ワルミ大橋，60–90 分',
+      map:'リカリカワルミ', tags:[['drive','15 分']],
+      detail:'在本島這側靠近ワルミ大橋，不用進古宇利就看得到大橋跟海景；想入島從那裡過橋只要 10 分鐘，現場看小孩體力決定。'},
+    {t:'18:30', name:'晚餐：名護市區（三選一）', sub:'見下方候選，建議先訂位', key:true, tags:[['drive','30 分'],['book','待訂位']]}
+  ],
+  cards:[
+    {title:'食事処 ティーダの森（蒂達之森）', meta:'名護市東江 3-22-16 1F', tel:'0980-43-1334',
+      map:'食事処 ティーダの森 名護', body:'火～土 17:30–22:00，週一休。阿古豬涮涮鍋＋居酒屋單點。45 席、12 車位，收卡。<b>離住宿最近。</b>'},
+    {title:'島豚七輪燒 満味', meta:'名護市伊差川 251', tel:'0980-53-5383',
+      map:'島豚七輪焼 満味', body:'17:00–22:00（餐點 L.O. 21:00），週日・週一休。山原島豬專門店，古民家有<b>座敷席</b>（小孩好坐）。夏天也供涮涮鍋。開店即滿，<b>務必預約</b>。市區北方約 10 分。'},
+    {title:'燒肉乃我那覇 本店', meta:'名護市宮里 1410-1 2F', tel:'0980-43-5369',
+      map:'焼肉乃我那覇 本店 名護', body:'17:30–22:30（最終入店 21:30），週三休。我那覇畜產直營，山原和牛＋山原豬炭火燒。<b>掘りごたつ座位</b>，有冷麵和沖繩麵，小孩有東西吃。58 號名護 BYPASS 旁，可網路預約。'}
+  ],
+  plus:['今歸仁城跡（世界遺產，順路，約 1 小時）','古宇利島（從リカリカワルミ過橋約 10 分）','古宇利海洋塔（電動車、貝殼館，室內外皆有）'],
+  rain:'水族館本身就是最強雨備，直接待到下午；備瀨改古宇利海洋塔。'
+},
+{
+  date:'2026-08-01', label:'8/1', wk:'六', eyebrow:'DAY 3', title:'瀨底海灘 → 蝦蝦飯 → 部瀨名',
+  events:[
+    {t:'09:00', name:'名護出發'},
+    {t:'09:40', name:'瀨底島：瀨底大橋、瀨底海灘戲水', sub:'放到 3 小時，玩到飽', key:true,
+      map:'瀬底ビーチ', tags:[['drive','35 分']]},
+    {t:'12:45', name:'午餐：CRAZY GARLIC SHRIMP 8 蝦蝦飯', sub:'本部町谷茶 29-70',
+      map:'CRAZY GARLIC SHRIMP 8 本部町', tel:'090-5220-2021', tags:[['drive','10 分'],['book','免預約']],
+      detail:'每天 8:00–16:00（14:00 前到最保險），可刷卡。'},
+    {t:'14:40', name:'部瀨名海中公園', sub:'玻璃底船 + 海中展望塔，放到 2.5 小時', key:true,
+      map:'ブセナ海中公園', tags:[['drive','40 分'],['book','免預約']],
+      detail:'夏季 9:00–18:00（最後入場 17:30）。玻璃船每小時 10 分、30 分、50 分發船，航程約 20 分。套票大人 2,100 円／4 歲–國中 1,050 円，現場買。園內有免費接駁車。<br><b>時間充裕的用法：</b>先搭 15:10 或 15:30 的船，回岸後再慢慢逛海中展望塔（室內看海底），小孩看不膩可以再排一班。'},
+    {t:'17:50', name:'進屋嘉住宿，放行李', tags:[['stay','金武町屋嘉'],['drive','30–35 分']],
+      detail:'部瀨名（許田IC 旁）→ 屋嘉可走高速到金武IC 再往南，或走 58 到恩納轉縣道 88 號屋嘉恩納線橫越。<b>屋嘉IC 是半交流道</b>，從許田方向南下不能在屋嘉下，導航要設金武IC 或走一般道。'},
+    {t:'18:30', name:'晚餐（金武／恩納）', tags:[['book','待定']]}
+  ],
+  plus:['名護鳳梨園（自駕鳳梨號，1.5 小時）——改為備用，瀨底提早收或下雨時再排',
+        'ネオパーク名護（餵動物＋小火車）',
+        '幸喜ビーチ（部瀨名前的免費公共海灘）——想再下水一次才排'],
+  warns:['<b>屋嘉ビーチ不是公認海水浴場</b>：沒有水母防護網、沒有救生員。8 月是箱水母（ハブクラゲ）旺季，小孩下水要穿防寒衣／長袖水母衣，只在腳踏得到底的範圍玩，大人全程貼身。純散步、撿貝殼、看夕陽最安全。'],
+  tip:'住屋嘉的好處：8/2 早上到 BIOS 之丘只要 20 分鐘（從名護要 50–60 分），等於多睡一小時，還能退房前先去海邊走走。',
+  rain:'海中展望塔本身就是雨天景點；瀨底戲水改鳳梨園（室內外都有）+ 展望塔延長。'
+},
+{
+  date:'2026-08-02', label:'8/2', wk:'日', eyebrow:'DAY 4', title:'退房南下 · うるま東側 → 那霸',
+  events:[
+    {t:'08:30', name:'屋嘉海灘散步／踏浪', sub:'住宿就在旁邊', opt:true, tags:[['walk','步行']]},
+    {t:'10:00', name:'屋嘉退房'},
+    {t:'10:20', name:'BIOS 之丘', sub:'水牛車、遊湖船、划槳、餵小動物，停留 3 小時', key:true,
+      map:'ビオスの丘 うるま市', tel:'098-965-3400', tags:[['drive','20 分']],
+      detail:'門票（含湖水觀賞舟 1 次）大人 2,200 円／小人 4 歲–小學生 1,100 円 → 共 <b>5,500 円</b>。<br>🚢 湖水觀賞舟（已含）：約 25 分，有頂棚，湖面無浪，最適合小孩。<br>🐃 水牛車（另計，加購共 5,500 円）：有頂棚，本島唯一每天運行。<br>🛶 獨木舟（另計，共 4,950 円）。<br>🆓 免費：特大鞦韆、木製遊具、動物互動、蘭花展示。<br>個人客這些項目<b>都不用預約</b>，現場買即可。門票在アソビュー／じゃらん／官網事前購買價格與現場相同。'},
+    {t:'13:00', name:'午餐（うるま／中部）', tags:[['drive','20 分'],['book','待定']]},
+    {t:'14:30', name:'海中道路 → 濱比嘉島', sub:'開在海上，停留 2 小時', key:true,
+      map:'海中道路 うるま市', tags:[['drive','25–30 分']]},
+    {t:'16:30', name:'果報バンタ', sub:'宮城島斷崖絕景，快停 30 分', opt:true,
+      map:'果報バンタ', tags:[['drive','15 分']]},
+    {t:'18:00', name:'晚餐（中部或回那霸吃）', tags:[['book','待定']]},
+    {t:'19:30', name:'進那霸住宿，之後不再搬行李', tags:[['stay','那霸（旭橋）'],['drive','60–70 分']]}
+  ],
+  plus:['ぬちまーす観光製塩ファクトリー（宮城島，免費參觀製鹽，與果報バンタ同園區）'],
+  warns:['BIOS 之丘沒有固定公休，採<b>開園行事曆</b>制；營業時間各家寫法不一。出發前上官網確認 8/2 有開即可，你們早上就到，時間不受影響。'],
+  rain:'BIOS 之丘全戶外，下雨改永旺夢樂城 Rycom（北中城，在回那霸路上）。'
+},
+{
+  date:'2026-08-03', label:'8/3', wk:'一', eyebrow:'DAY 5', title:'休息日 · 瀨長島 + 那霸市區',
+  intro:'這天刻意排鬆，前面連跑四天，中間需要喘息日。',
+  events:[
+    {t:'10:00', name:'瀨長島 Umikaji Terrace', sub:'看飛機起降、海景、逛小店，2–3 小時',
+      map:'瀬長島ウミカジテラス', tags:[['drive','20 分']]},
+    {t:'13:00', name:'午餐（瀨長島現場）', tags:[['book','待定']]},
+    {t:'14:30', name:'回住宿休息／小孩午覺', tags:[['drive','20 分']]},
+    {t:'17:30', name:'晚餐：燒肉神社 USHIICHI', sub:'已訂位，走路 10 分內', key:true,
+      map:'焼肉神社 USHIICHI 那覇', tags:[['walk','步行'],['book','已訂位']],
+      detail:'MEAT SHOP 琉球直營和牛專門店，主打宮崎牛，鄰近旭橋站／県庁前站。'},
+    {t:'19:30', name:'國際通散步、壺屋やちむん通り', opt:true, map:'壺屋やちむん通り', tags:[['walk','步行']]}
+  ],
+  plus:['波上宮 + 波之上海灘（開車 10 分）'],
+  rain:'沖繩縣立博物館・美術館（おもろまち站）或 AEON 那霸店（小祿站）。'
+},
+{
+  date:'2026-08-04', label:'8/4', wk:'二', eyebrow:'DAY 6', title:'豐崎採買 → 還車 → 那霸市區',
+  intro:'11:00 還車，之後全程單軌＋步行。',
+  events:[
+    {t:'09:00', name:'那霸出發'},
+    {t:'09:30', name:'iias 豐崎 + Little Universe 微型樂園', sub:'SERIA、無印——最後一次有車採買',
+      map:'イーアス沖縄豊崎', tags:[['drive','20 分']]},
+    {t:'11:00', name:'還車', key:true, map:'沖縄県豊見城市豊崎 3-95', tags:[['drive','5 分']]},
+    {t:'11:30', name:'回那霸市區', tags:[['bus','計程車約 20 分或搭巴士']]},
+    {t:'13:00', name:'午餐（那霸市區）', tags:[['book','待定']]},
+    {t:'14:30', name:'西來院 達摩寺', sub:'funpass 金口包', opt:true, map:'西来院 達磨寺 那覇', tags:[['rail','單軌＋計程車']]},
+    {t:'16:00', name:'國際通 + 壺屋やちむん通り', map:'国際通り 那覇', tags:[['walk','步行']]},
+    {t:'18:00', name:'晚餐（國際通周邊）', tags:[['book','待定']]},
+    {t:'20:00', name:'回住宿整理行李'}
+  ],
+  rain:'iias、Little Universe 本身就是室內；國際通有拱廊商店街。'
+},
+{
+  date:'2026-08-05', label:'8/5', wk:'三', eyebrow:'DEPARTURE', title:'返程',
+  events:[
+    {t:'07:00', name:'那霸退房'},
+    {t:'07:15', name:'單軌 旭橋 → 那霸空港', tags:[['rail','約 12 分']]},
+    {t:'07:40', name:'抵達航廈，辦理報到', sub:'國際線建議提前 2 小時'},
+    {t:'10:10', name:'起飛', key:true}
+  ]
+}
+];
+
+const MEALS = [
+ ['7/30','早','オハコルテベーカリー（泉崎）','done','已定'],
+ ['7/30','午','港川外人住宅（現場挑店）','done','已定'],
+ ['7/30','晚','暖暮拉麵 名護店','done','免預約'],
+ ['7/31','午','本部區域','open','待定'],
+ ['7/31','晚','三選一：蒂達之森／満味／乃我那覇','pick','待訂位'],
+ ['8/1','午','蝦蝦飯（谷茶）','done','免預約'],
+ ['8/1','晚','金武（タコライス發源地）／恩納','open','待定'],
+ ['8/2','午','うるま／中部','open','待定'],
+ ['8/2','晚','中部或那霸','open','待定'],
+ ['8/3','午','瀨長島','open','待定'],
+ ['8/3','晚','燒肉神社','done','已訂位'],
+ ['8/4','午','那霸市區','open','待定'],
+ ['8/4','晚','國際通周邊','open','待定']
+];
+
+const TODO = [
+ ['now','最急',['SIM 卡／eSIM']],
+ ['week','這週',['選定 7/31 名護晚餐並訂位（三間候選）','查港川想去店家的公休日（7/30 週四）','上 BIOS 官網確認 8/2 開園','決定 BIOS 是否加購水牛車（+5,500 円）']],
+ ['ok','已完成',['燒肉神社訂位（8/3 17:30）','8/1 屋嘉住宿','駕照日文譯本','兒童安全座椅加購','旅平險＋旅遊不便險','行李加購','護照效期','美麗海水族館門票（7/31）']]
+];
+
+const NOBOOK = '部瀨名海中公園、瀨長島、瀨底島、古宇利島、海中道路、リカリカワルミ、蝦蝦飯';
+
+/* ---------- render ---------- */
+const esc = s => s;
+function evHTML(e){
+  const cls = ['ev', e.opt?'opt':'', e.key?'key':''].filter(Boolean).join(' ');
+  let tags = (e.tags||[]).map(([k,v])=>`<span class="tag ${k}">${v}</span>`).join('');
+  if(e.opt) tags = `<span class="tag">➕ 加選</span>` + tags;
+  let acts = '';
+  if(e.map) acts += `<a class="act" target="_blank" rel="noopener" href="${MAP(e.map)}">地圖</a>`;
+  if(e.tel) acts += `<a class="act tel" href="tel:${e.tel.replace(/-/g,'')}">撥號 ${e.tel}</a>`;
+  return `<div class="${cls}" data-time="${e.t}">
+    <div class="t">${e.t}</div>
+    <div class="card">
+      <h3>${e.name}</h3>
+      ${e.sub?`<div class="sub">${e.sub}</div>`:''}
+      ${tags?`<div class="tags">${tags}</div>`:''}
+      ${acts?`<div class="actions">${acts}</div>`:''}
+      ${e.detail?`<details class="more"><summary>詳細</summary><div class="body">${e.detail}</div></details>`:''}
+    </div>
+  </div>`;
+}
+
+function dayHTML(d){
+  let h = `<div class="daytitle"><div class="eyebrow">${d.eyebrow} · ${d.label} ${d.wk}</div><h2>${d.title}</h2></div>`;
+  if(d.intro) h += `<div class="note tip">${d.intro}</div><div style="height:12px"></div>`;
+  h += `<div class="tl" id="tl">` + d.events.map(evHTML).join('') + `</div>`;
+  if(d.cards){
+    h += `<div class="sechead">晚餐候選</div>`;
+    h += d.cards.map(c=>`<div class="row"><div class="v">
+      <div class="m">${c.title}</div>
+      <div class="s">${c.meta}</div>
+      <div class="s" style="margin-top:5px;color:#31505B">${c.body}</div>
+      <div class="actions"><a class="act" target="_blank" rel="noopener" href="${MAP(c.map)}">地圖</a><a class="act tel" href="tel:${c.tel.replace(/-/g,'')}">撥號 ${c.tel}</a></div>
+    </div></div>`).join('');
+  }
+  (d.warns||[]).forEach(w => h += `<div class="note warn">⚠️ ${w}</div>`);
+  if(d.tip) h += `<div class="note tip">💡 ${d.tip}</div>`;
+  if(d.plus && d.plus.length) h += `<div class="note tip">➕ 時間夠再加<ul>${d.plus.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;
+  if(d.rain) h += `<div class="note rain">☔ 雨備／酷熱替代：${d.rain}</div>`;
+  return h;
+}
+
+function mealsHTML(){
+  let h = `<div class="daytitle"><div class="eyebrow">MEALS</div><h2>用餐進度</h2></div>`;
+  h += MEALS.map(([d,s,n,st,lb])=>`<div class="row">
+    <div class="k">${d}<br><span style="font-family:var(--body);font-size:11px">${s}</span></div>
+    <div class="v"><div class="m" style="font-size:14.5px">${n}</div></div>
+    <span class="state ${st}">${lb}</span></div>`).join('');
+  h += `<div class="note tip" style="margin-top:14px"><b>免預約：</b>${NOBOOK}</div>`;
+  return h;
+}
+
+function todoHTML(){
+  let h = `<div class="daytitle"><div class="eyebrow">CHECKLIST</div><h2>待辦（依急迫度）</h2></div>`;
+  TODO.forEach(([k,label,items],gi)=>{
+    h += `<div class="urg ${k}">${label}</div>`;
+    items.forEach((it,i)=>{
+      const id = 'todo-'+gi+'-'+i;
+      const pre = k==='ok' ? ' checked' : '';
+      h += `<label class="todo"><input type="checkbox" id="${id}"${pre}><span>${it}</span></label>`;
+    });
+  });
+  h += `<div class="note tip" style="margin-top:14px">勾選只存在這台手機的瀏覽器裡，關掉分頁也會留著。</div>`;
+  return h;
+}
+
+/* ---------- state ---------- */
+const scroll = document.getElementById('dayscroll');
+const viewDays = document.getElementById('view-days');
+const now = new Date();
+const todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+let todayIdx = DAYS.findIndex(d=>d.date===todayStr);
+
+DAYS.forEach((d,i)=>{
+  const b = document.createElement('button');
+  b.className = 'chip' + (i===todayIdx?' today':'');
+  b.setAttribute('role','tab');
+  b.setAttribute('aria-selected', 'false');
+  b.innerHTML = `${d.label}<small>${d.wk}</small>`;
+  b.onclick = ()=>selectDay(i);
+  scroll.appendChild(b);
+});
+
+function selectDay(i){
+  [...scroll.children].forEach((c,j)=>c.setAttribute('aria-selected', j===i?'true':'false'));
+  viewDays.innerHTML = dayHTML(DAYS[i]);
+  if(i===todayIdx) markNow();
+  window.scrollTo({top:0});
+  scroll.children[i].scrollIntoView({inline:'center',block:'nearest'});
+}
+
+function markNow(){
+  const mins = now.getHours()*60 + now.getMinutes();
+  const evs = [...viewDays.querySelectorAll('.ev')];
+  const line = document.createElement('div');
+  line.className = 'nowline';
+  line.innerHTML = `<span>現在 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</span>`;
+  let placed = false;
+  for(const ev of evs){
+    const [hh,mm] = ev.dataset.time.split(':').map(Number);
+    if(hh*60+mm > mins){ ev.parentNode.insertBefore(line, ev); placed = true; break; }
+  }
+  if(!placed && evs.length) evs[evs.length-1].after(line);
+}
+
+/* status line */
+(function(){
+  const start = new Date('2026-07-29T00:00:00');
+  const el = document.getElementById('status');
+  if(todayIdx >= 0){
+    el.innerHTML = `今天 · <b>${DAYS[todayIdx].label} ${DAYS[todayIdx].wk}</b> · ${DAYS[todayIdx].title}`;
+  } else {
+    el.innerHTML = '';
+  }
+})();
+
+selectDay(todayIdx >= 0 ? todayIdx : 0);
+
+/* bottom tabs */
+const views = {days:viewDays, meals:document.getElementById('view-meals'), todo:document.getElementById('view-todo')};
+views.meals.innerHTML = mealsHTML();
+views.todo.innerHTML = todoHTML();
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b===btn?'true':'false'));
+    const v = btn.dataset.view;
+    Object.entries(views).forEach(([k,el])=>el.classList.toggle('hidden', k!==v));
+    scroll.classList.toggle('hidden', v!=='days');
+    window.scrollTo({top:0});
+  };
+});
+
+/* theme: manual only, ignores device setting */
+(function(){
+  const KEY='oki-theme';
+  const btn=document.getElementById('themeToggle');
+  const meta=document.querySelector('meta[name="theme-color"]');
+  let theme='light';
+  try{ theme = localStorage.getItem(KEY) || 'light'; }catch(e){}
+  function apply(t){
+    theme=t;
+    document.documentElement.setAttribute('data-theme',t);
+    btn.querySelector('.ic').textContent = t==='light' ? '☾' : '☀';
+    btn.querySelector('.lbl').textContent = t==='light' ? '深色' : '淺色';
+    if(meta) meta.setAttribute('content', t==='light' ? '#FFFFFF' : '#183851');
+    try{ localStorage.setItem(KEY,t); }catch(e){}
+  }
+  btn.onclick = ()=>apply(theme==='light'?'dark':'light');
+  apply(theme);
+})();
+
+/* persist checkboxes */
+try{
+  const KEY='oki-todo';
+  const saved = JSON.parse(localStorage.getItem(KEY)||'{}');
+  views.todo.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    if(cb.id in saved) cb.checked = saved[cb.id];
+    cb.addEventListener('change',()=>{
+      saved[cb.id]=cb.checked;
+      localStorage.setItem(KEY, JSON.stringify(saved));
+    });
+  });
+}catch(e){}
+</script>
+</body>
+</html>
