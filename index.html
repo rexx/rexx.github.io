@@ -1,1 +1,179 @@
-Hello World
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rexx 的小工具</title>
+<meta name="description" content="一組自己做的網頁小工具與旅遊行程頁。">
+<meta name="theme-color" content="#0b1120">
+<style>
+  :root {
+    --bg: #0b1120;
+    --card: #131c31;
+    --card-hover: #1b2740;
+    --text: #e8edf7;
+    --muted: #93a1bd;
+    --line: #22304d;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 3rem 1.25rem 4rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+                 "PingFang TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  main { max-width: 60rem; margin: 0 auto; }
+
+  h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .tagline {
+    margin: 0 0 2.5rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    background: var(--card);
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    background: var(--card-hover);
+    border-color: #3a4d76;
+    transform: translateY(-2px);
+  }
+
+  .card:focus-visible { outline: 2px solid #6ea8fe; outline-offset: 2px; }
+
+  /* Icons come from each app's own deployment, so this page stores none. */
+  .card img {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    border-radius: 0.65rem;
+    background: #0b1120;
+  }
+
+  /* Letter mark for the apps that ship no icon yet */
+  .card .mark {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    border-radius: 0.65rem;
+    display: grid;
+    place-items: center;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0b1120;
+    background: linear-gradient(140deg, #7dd3fc, #a78bfa);
+  }
+
+  .card .name { font-weight: 600; }
+
+  .card .desc {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  footer a { color: #93b8ff; }
+</style>
+</head>
+<body>
+<main>
+  <h1>rexx 的小工具</h1>
+  <p class="tagline">一組自己做的網頁小工具，每個都能直接在瀏覽器開。</p>
+
+  <div class="grid">
+    <a class="card" href="/QR-Reader/">
+      <img src="/QR-Reader/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">QR Reader<span class="desc">相機即時掃描 QR code</span></span>
+    </a>
+
+    <a class="card" href="/Cozy-Pocket/">
+      <img src="/Cozy-Pocket/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">Cozy Pocket<span class="desc">日曆式記帳</span></span>
+    </a>
+
+    <a class="card" href="/Taiwan-Bank-High-Interest-Rate/">
+      <img src="/Taiwan-Bank-High-Interest-Rate/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">銀行高利活存攻略<span class="desc">台灣各銀行高利活存比較</span></span>
+    </a>
+
+    <a class="card" href="/theater-screen-size-2/">
+      <img src="/theater-screen-size-2/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">影廳大銀幕比一比<span class="desc">台灣影廳銀幕尺寸視覺化</span></span>
+    </a>
+
+    <a class="card" href="/Cosmic-Spirograph/">
+      <img src="/Cosmic-Spirograph/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">Cosmic Spirograph<span class="desc">幾何圖樣產生器</span></span>
+    </a>
+
+    <a class="card" href="/mini-sudoku/">
+      <img src="/mini-sudoku/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">4×4 數獨<span class="desc">給小小孩的迷你數獨</span></span>
+    </a>
+
+    <a class="card" href="/symbol-melody/">
+      <span class="mark" aria-hidden="true">S</span>
+      <span class="name">Symbol Melody<span class="desc">符號旋律</span></span>
+    </a>
+
+    <a class="card" href="/polyhedra-lab/">
+      <span class="mark" aria-hidden="true">多</span>
+      <span class="name">互動多面體實驗室<span class="desc">截角的秘密</span></span>
+    </a>
+
+    <a class="card" href="/numberblocks-episodes/">
+      <span class="mark" aria-hidden="true">N</span>
+      <span class="name">Numberblocks 各集列表<span class="desc">可搜尋、標記看過</span></span>
+    </a>
+
+    <a class="card" href="/travel-2026-nagoya/">
+      <img src="/travel-2026-nagoya/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
+      <span class="name">名古屋親子遊<span class="desc">2026 行程</span></span>
+    </a>
+  </div>
+
+  <footer>
+    原始碼在 <a href="https://github.com/rexx">github.com/rexx</a>。
+  </footer>
+</main>
+</body>
+</html>
