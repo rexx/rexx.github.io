@@ -20,7 +20,7 @@
 
   body {
     margin: 0;
-    padding: 3rem 1.25rem 4rem;
+    padding: 1.5rem 1.25rem 4rem;
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
@@ -30,6 +30,32 @@
   }
 
   main { max-width: 60rem; margin: 0 auto; }
+
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+
+  #lang {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  #lang:hover {
+    background: var(--card-hover);
+    border-color: #3a4d76;
+    color: var(--text);
+  }
+
+  #lang:focus-visible { outline: 2px solid #6ea8fe; outline-offset: 2px; }
 
   .grid {
     display: grid;
@@ -82,64 +108,134 @@
     background: linear-gradient(140deg, #7dd3fc, #a78bfa);
   }
 
+  .card .text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
   .card .name { font-weight: 600; }
 
   .card .desc {
-    display: block;
     color: var(--muted);
     font-size: 0.85rem;
-    font-weight: 400;
   }
 </style>
 </head>
 <body>
 <main>
+  <div class="topbar">
+    <button id="lang" type="button" aria-label="Switch to English">EN</button>
+  </div>
+
   <div class="grid">
     <a class="card" href="/QR-Reader/">
       <img src="/QR-Reader/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">QR Reader<span class="desc">相機即時掃描 QR code</span></span>
+      <span class="text">
+        <span class="name" data-zh="QR Reader" data-en="QR Reader">QR Reader</span>
+        <span class="desc" data-zh="相機即時掃描 QR code" data-en="Live QR scanning with your camera">相機即時掃描 QR code</span>
+      </span>
     </a>
 
     <a class="card" href="/Cozy-Pocket/">
       <img src="/Cozy-Pocket/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">Cozy Pocket<span class="desc">日曆式記帳</span></span>
+      <span class="text">
+        <span class="name" data-zh="Cozy Pocket" data-en="Cozy Pocket">Cozy Pocket</span>
+        <span class="desc" data-zh="日曆式記帳" data-en="Expense tracking on a calendar">日曆式記帳</span>
+      </span>
     </a>
 
     <a class="card" href="/Taiwan-Bank-High-Interest-Rate/">
       <img src="/Taiwan-Bank-High-Interest-Rate/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">銀行高利活存攻略<span class="desc">台灣各銀行高利活存比較</span></span>
+      <span class="text">
+        <span class="name" data-zh="銀行高利活存攻略" data-en="Taiwan Bank Rates">銀行高利活存攻略</span>
+        <span class="desc" data-zh="台灣各銀行高利活存比較" data-en="Compare high-interest savings accounts">台灣各銀行高利活存比較</span>
+      </span>
     </a>
 
     <a class="card" href="/theater-screen-size-2/">
       <img src="/theater-screen-size-2/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">影廳大銀幕比一比<span class="desc">台灣影廳銀幕尺寸視覺化</span></span>
+      <span class="text">
+        <span class="name" data-zh="影廳大銀幕比一比" data-en="Cinema Screen Sizes">影廳大銀幕比一比</span>
+        <span class="desc" data-zh="台灣影廳銀幕尺寸視覺化" data-en="Taiwan theater screens, drawn to scale">台灣影廳銀幕尺寸視覺化</span>
+      </span>
     </a>
 
     <a class="card" href="/Cosmic-Spirograph/">
       <img src="/Cosmic-Spirograph/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">Cosmic Spirograph<span class="desc">幾何圖樣產生器</span></span>
+      <span class="text">
+        <span class="name" data-zh="Cosmic Spirograph" data-en="Cosmic Spirograph">Cosmic Spirograph</span>
+        <span class="desc" data-zh="幾何圖樣產生器" data-en="Geometric pattern generator">幾何圖樣產生器</span>
+      </span>
     </a>
 
     <a class="card" href="/mini-sudoku/">
       <img src="/mini-sudoku/apple-touch-icon.png" alt="" width="48" height="48" loading="lazy">
-      <span class="name">4×4 數獨<span class="desc">給小小孩的迷你數獨</span></span>
+      <span class="text">
+        <span class="name" data-zh="4×4 數獨" data-en="4×4 Sudoku">4×4 數獨</span>
+        <span class="desc" data-zh="迷你數獨，可選難度、離線可玩" data-en="Mini sudoku with difficulty levels, works offline">迷你數獨，可選難度、離線可玩</span>
+      </span>
     </a>
 
     <a class="card" href="/symbol-melody/">
-      <span class="mark" aria-hidden="true">S</span>
-      <span class="name">Symbol Melody<span class="desc">符號旋律</span></span>
+      <span class="mark" aria-hidden="true" data-zh="S" data-en="S">S</span>
+      <span class="text">
+        <span class="name" data-zh="Symbol Melody" data-en="Symbol Melody">Symbol Melody</span>
+        <span class="desc" data-zh="數字簡譜轉成圖案譜" data-en="Turn number notation into picture scores">數字簡譜轉成圖案譜</span>
+      </span>
     </a>
 
     <a class="card" href="/polyhedra-lab/">
-      <span class="mark" aria-hidden="true">多</span>
-      <span class="name">互動多面體實驗室<span class="desc">截角的秘密</span></span>
+      <span class="mark" aria-hidden="true" data-zh="多" data-en="P">多</span>
+      <span class="text">
+        <span class="name" data-zh="互動多面體實驗室" data-en="Polyhedra Lab">互動多面體實驗室</span>
+        <span class="desc" data-zh="截角的秘密" data-en="The secret of truncation">截角的秘密</span>
+      </span>
     </a>
 
     <a class="card" href="/numberblocks-episodes/">
-      <span class="mark" aria-hidden="true">N</span>
-      <span class="name">Numberblocks 各集列表<span class="desc">可搜尋、標記看過</span></span>
+      <span class="mark" aria-hidden="true" data-zh="N" data-en="N">N</span>
+      <span class="text">
+        <span class="name" data-zh="Numberblocks 各集列表" data-en="Numberblocks Episodes">Numberblocks 各集列表</span>
+        <span class="desc" data-zh="可搜尋、標記看過" data-en="Searchable, with watched tracking">可搜尋、標記看過</span>
+      </span>
     </a>
   </div>
 </main>
+
+<script>
+  // Chinese is what the markup ships, so the page reads correctly with no JS.
+  (function () {
+    var STORE = 'rexx-lang';
+    var TITLE = { zh: 'rexx 的小工具', en: "rexx's little tools" };
+    var HTML_LANG = { zh: 'zh-TW', en: 'en' };
+    var btn = document.getElementById('lang');
+
+    function apply(lang) {
+      document.documentElement.lang = HTML_LANG[lang];
+      document.title = TITLE[lang];
+      var nodes = document.querySelectorAll('[data-zh]');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].textContent = nodes[i].getAttribute('data-' + lang);
+      }
+      btn.textContent = lang === 'en' ? '中' : 'EN';
+      btn.setAttribute('aria-label', lang === 'en' ? '切換為中文' : 'Switch to English');
+    }
+
+    var lang = 'zh';
+    try {
+      if (localStorage.getItem(STORE) === 'en') lang = 'en';
+    } catch (e) {
+      // Private browsing can throw on localStorage; the zh default still stands.
+    }
+    if (lang === 'en') apply('en');
+
+    btn.addEventListener('click', function () {
+      lang = lang === 'en' ? 'zh' : 'en';
+      try { localStorage.setItem(STORE, lang); } catch (e) {}
+      apply(lang);
+    });
+  })();
+</script>
 </body>
 </html>
